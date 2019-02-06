@@ -1,7 +1,7 @@
 """
   Capstone Project.  Code to run on the EV3 robot (NOT on a laptop).
   Author:  Your professors (for the framework)
-    and Yicheng Yang.
+    and Yicheng Yang..
   Winter term, 2018-2019.
 """
 
