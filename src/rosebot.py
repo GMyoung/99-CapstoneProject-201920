@@ -200,6 +200,18 @@ class ArmAndClaw(object):
         """ Raises the Arm until its touch sensor is pressed. """
 
     def calibrate_arm(self):
+        self. motor.turn_on(100)
+        while True:
+            if self.touch_sensor.is_pressed():
+                self.motor.turn_off()
+                break
+        self. motor.turn_on(-100)
+        while True:
+            if self.motor.():
+                self.motor.turn_off()
+                break
+
+
 
                   
         """
