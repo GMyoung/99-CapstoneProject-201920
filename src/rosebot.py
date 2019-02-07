@@ -77,6 +77,8 @@ class DriveSystem(object):
     # -------------------------------------------------------------------------
 
     def go(self, left_wheel_speed, right_wheel_speed):
+        self.left_motor.turn_on(left_wheel_speed)
+        self.right_motor.turn_on(right_wheel_speed)
         """ Makes the left and right wheel motors spin at the given speeds. """
 
     def stop(self):

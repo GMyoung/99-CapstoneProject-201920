@@ -20,6 +20,8 @@ import time
 
 
 def get_teleoperation_frame(window, mqtt_sender):
+
+
     """
     Constructs and returns a frame on the given window, where the frame
     has Entry and Button objects that control the EV3 robot's motion
@@ -157,6 +159,12 @@ def get_control_frame(window, mqtt_sender):
 # Handlers for Buttons in the Teleoperation frame.
 ###############################################################################
 def handle_forward(left_entry_box, right_entry_box, mqtt_sender):
+    print("forward",left_entry_box.get(),right_entry_box.get())
+    mqtt_sender.send_message("go", [left_entry_box.get(),right_entry_box()])
+
+
+
+
     """
     Tells the robot to move using the speeds in the given entry boxes,
     with the speeds used as given.
@@ -167,6 +175,11 @@ def handle_forward(left_entry_box, right_entry_box, mqtt_sender):
 
 
 def handle_backward(left_entry_box, right_entry_box, mqtt_sender):
+    print('backward',left_entry_box.get(),right_entry_box.get())
+    left = -int(left_entry_box.get())
+    right = -int(right_entry_box())
+    mqtt_sender.send_message("go",[str(left), str(right)])
+
     """
     Tells the robot to move using the speeds in the given entry boxes,
     but using the negatives of the speeds in the entry boxes.
