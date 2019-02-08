@@ -14,4 +14,11 @@ class ResponderToGUIMessages(object):
         left = int(left_wheel_speed)
         right = int(right_wheel_speed)
         self.robot.drive_system.go(left, right)
-
+    def raise_arm(self):
+        self.robot.arm_and_claw.raise_arm()
+    def lower_arm(self):
+        self.robot.arm_and_claw.lower_arm()
+    def calibrate_arm(self):
+        self.robot.arm_and_claw.caliberate_arm()
+    def move_arm_to_position(self,pos):
+        self.robot.arm_and_claw.move_arm_to_position(int(pos))
