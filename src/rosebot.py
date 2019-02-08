@@ -89,7 +89,7 @@ class DriveSystem(object):
     def go_straight_for_seconds(self, seconds, speed):
         """
         Makes the robot go straight (forward if speed > 0, else backward)
-        at the given speed for the given number of seconds.
+        at the given speed for the given number of seconds. 
         """
 
         start = time.time()
