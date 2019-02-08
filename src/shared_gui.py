@@ -198,7 +198,27 @@ def get_control_frame(window, mqtt_sender):
 # what should happen when the Button is pressed.
 ###############################################################################
 ###############################################################################
+def get_sound_system(window,mqtt_sender):
+    frame = ttk.Frame(window, padding=10, borderwidth=5, relief="ridge")
+    frame.grid()
+    frame_label = ttk.Label(frame, text="Control")
+    beeper_label=ttk.Label(frame,text='beeper')
+    tone_maker_frequency_label=ttk.Label(frame,text='frequency')
+    tone_maker_duration_label=ttk.Label(frame,text='duration')
 
+
+    beeper_button=ttk.Button(frame,text='beeper')
+    tone_maker_button=ttk.Button(frame,text='tone maker')
+
+    frame_label.grid(row=0,column=1)
+    # beeper_label.grid(row=1,column=0)
+    beeper_button.grid(row=1,column=1)
+    tone_maker_frequency_label.grid(row=2,column=1)
+    tone_maker_duration_label.grid(row=2,column=2)
+
+
+
+    return frame
 ###############################################################################
 # Handlers for Buttons in the Teleoperation frame.
 ###############################################################################
