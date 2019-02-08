@@ -37,17 +37,39 @@ def get_teleoperation_frame(window, mqtt_sender):
     frame_label = ttk.Label(frame, text="Teleoperation")
     left_speed_label = ttk.Label(frame, text="Left wheel speed (0 to 100)")
     right_speed_label = ttk.Label(frame, text="Right wheel speed (0 to 100)")
+    go_for_seconds_time_label=ttk.Label(frame,text='time')
+    go_for_seconds_speed_label = ttk.Label(frame, text='speed(0-100)')
+    go_for_distance_inch_label=ttk.Label(frame,text='inch')
+    go_for_distance_speed_label=ttk.Label(frame,text='speed(0-100)')
+    go_for_degree_inch_label = ttk.Label(frame, text='degrees')
+    go_for_degree_speed_label = ttk.Label(frame, text='speed(0-100)')
 
     left_speed_entry = ttk.Entry(frame, width=8)
     left_speed_entry.insert(0, "100")
     right_speed_entry = ttk.Entry(frame, width=8, justify=tkinter.RIGHT)
     right_speed_entry.insert(0, "100")
+    go_for_seconds_time_entry=ttk.Entry(frame,width=8)
+    go_for_seconds_time_entry.insert(0,'0')
+    go_for_seconds_speed_entry = ttk.Entry(frame, width=8)
+    go_for_seconds_speed_entry.insert(0, '0')
+    go_for_distance_inch_entry=ttk.Entry(frame,width=8)
+    go_for_distance_inch_entry.insert(0,'0')
+    go_for_distance_speed_entry = ttk.Entry(frame, width=8)
+    go_for_distance_speed_entry.insert(0, '0')
+    go_for_degree_inch_entry = ttk.Entry(frame, width=8)
+    go_for_degree_inch_entry.insert(0, '0')
+    go_for_degree_speed_entry = ttk.Entry(frame, width=8)
+    go_for_degree_speed_entry.insert(0, '0')
+
 
     forward_button = ttk.Button(frame, text="Forward")
     backward_button = ttk.Button(frame, text="Backward")
     left_button = ttk.Button(frame, text="Left")
     right_button = ttk.Button(frame, text="Right")
     stop_button = ttk.Button(frame, text="Stop")
+    go_for_seconds_button=ttk.Button(frame,text='go for seconds')
+    go_for_distance_button=ttk.Button(frame,text='go for distance using inches')
+    go_for_degree_button=ttk.Button(frame,text='go for distance using encoder')
 
     # Grid the widgets:
     frame_label.grid(row=0, column=1)
@@ -55,12 +77,27 @@ def get_teleoperation_frame(window, mqtt_sender):
     right_speed_label.grid(row=1, column=2)
     left_speed_entry.grid(row=2, column=0)
     right_speed_entry.grid(row=2, column=2)
+    go_for_seconds_time_label.grid(row=6,column=1)
+    go_for_seconds_speed_label.grid(row=6, column=2)
+    go_for_distance_inch_label.grid(row=8,column=1)
+    go_for_distance_speed_label.grid(row=8,column=2)
+    go_for_seconds_time_entry.grid(row=7, column=1)
+    go_for_seconds_speed_entry.grid(row=7,column=2)
+    go_for_distance_inch_entry.grid(row=9,column=1)
+    go_for_distance_speed_entry.grid(row=9, column=2)
+    go_for_degree_inch_label.grid(row=10, column=1)
+    go_for_degree_speed_label.grid(row=10, column=2)
+    go_for_degree_inch_entry.grid(row=11,column=1)
+    go_for_degree_speed_entry.grid(row=11, column=2)
 
     forward_button.grid(row=3, column=1)
     left_button.grid(row=4, column=0)
     stop_button.grid(row=4, column=1)
     right_button.grid(row=4, column=2)
     backward_button.grid(row=5, column=1)
+    go_for_seconds_button.grid(row=7,column=0)
+    go_for_distance_button.grid(row=9,column=0)
+    go_for_degree_button.grid(row=11,column=0)
 
     # Set the button callbacks:
     forward_button["command"] = lambda: handle_forward(
@@ -72,6 +109,13 @@ def get_teleoperation_frame(window, mqtt_sender):
     right_button["command"] = lambda: handle_right(
         left_speed_entry, right_speed_entry, mqtt_sender)
     stop_button["command"] = lambda: handle_stop(mqtt_sender)
+    go_for_seconds_button["command"]=lambda :handle_go_straight_for_seconds(
+        go_for_seconds_time_entry,go_for_seconds_speed_entry,mqtt_sender)
+    go_for_distance_button['command']=lambda :handle_go_straight_for_distance(
+        go_for_distance_inch_entry,go_for_distance_speed_entry,mqtt_sender)
+    go_for_degree_button['command']=lambda :handle_go_straight_for_degrees(
+        go_for_degree_inch_entry,go_for_degree_speed_entry,mqtt_sender)
+
 
     return frame
 
@@ -226,8 +270,22 @@ def handle_stop(mqtt_sender):
     Tells the robot to stop.
       :type  mqtt_sender:  com.MqttClient
     """
+def handle_go_straight_for_seconds(time_entry_box, speed_entry_box, mqtt_sender):
+    print('go straight for seconds')
+    time=int(time_entry_box.get())
+    speed=int(speed_entry_box.get())
+    mqtt_sender.send_message('go_straight_for_seconds', [time,speed])
 
-
+def handle_go_straight_for_distance(inch_entry_box,speed_entry_box,mqtt_sender):
+    print('go straight for inches')
+    inch=int(inch_entry_box.get())
+    speed=int(speed_entry_box.get())
+    mqtt_sender.send_message('go_straight_for_inches',[inch,speed])
+def handle_go_straight_for_degrees(inch_entry_box,speed_entry_box,mqtt_sender):
+    print('go straight for degrees')
+    inch = int(inch_entry_box.get())
+    speed = int(speed_entry_box.get())
+    mqtt_sender.send_message('go_straight_for_degrees', [inch, speed])
 ###############################################################################
 # Handlers for Buttons in the ArmAndClaw frame.
 ###############################################################################
@@ -270,6 +328,8 @@ def handle_move_arm_to_position(arm_position_entry, mqtt_sender):
     """
     print('move arm to position')
     mqtt_sender.send_message('move_arm_to_position',[str(int(arm_position_entry.get()))])
+
+
 
 
 

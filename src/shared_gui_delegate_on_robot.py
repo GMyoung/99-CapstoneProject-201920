@@ -31,3 +31,12 @@ class ResponderToGUIMessages(object):
         self.robot.arm_and_claw.calibrate_arm()
     def move_arm_to_position(self,pos):
         self.robot.arm_and_claw.move_arm_to_position(int(pos))
+    def go_straight_for_seconds(self,seconds,speed):
+        print('recieve go straight for seconds')
+        self.robot.drive_system.go_straight_for_seconds(seconds, speed)
+    def go_straight_for_inches(self,inch,speed):
+        print('recieve go straight for inches')
+        self.robot.drive_system.go_straight_for_inches_using_time(inch,speed)
+    def go_straight_for_degrees(self,inch,speed):
+        print('recieve go straight for inches')
+        self.robot.drive_system.go_straight_for_inches_using_encoder(inch,speed)

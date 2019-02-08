@@ -86,11 +86,15 @@ def stop():
     robot = rosebot.RoseBot()
     robot.drive_system.stop()
 def go_straight_for_seconds(second, speed):
+    print('running')
     robot = rosebot.RoseBot()
     robot.drive_system.go_straight_for_seconds(second, speed)
 def go_straight_for_inches_using_time(inch, speed):
     robot = rosebot.RoseBot()
     robot.drive_system.go_straight_for_inches_using_time(inch, speed)
+def go_straight_for_inches_using_encoder(inch, speed):
+    robot = rosebot.RoseBot()
+    robot.drive_system.go_straight_for_inches_using_encoder(inch, speed)
 
 
 
