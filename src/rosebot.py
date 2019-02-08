@@ -43,6 +43,7 @@ class RoseBot(object):
 #    DriveSystem
 ###############################################################################
 class DriveSystem(object):
+
     """
     Controls the robot's motion via GO and STOP methods,
         along with various methods that GO/STOP under control of a sensor.
@@ -84,6 +85,7 @@ class DriveSystem(object):
     def stop(self):
         self.right_motor.turn_off()
         self.left_motor.turn_off()
+
         """ Stops the left and right wheel motors. """
 
     def go_straight_for_seconds(self, seconds, speed):
@@ -106,7 +108,7 @@ class DriveSystem(object):
         for the given number of inches, using the approximate
         conversion factor of 10.0 inches per second at 100 (full) speed.
         """
-        inperdeg = self.left_motor.WheelCircumference / 360  # turn circumference of the object to inches per degree
+        inperdeg = self.wheel_circumference / 360  # turn circumference of the object to inches per degree
         deg = inches / inperdeg  # degree=inches/inches per degree
         self.left_motor.reset_position()
         self.go(speed, speed)  # object go in speed
