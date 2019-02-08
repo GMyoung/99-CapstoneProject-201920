@@ -92,12 +92,28 @@ class DriveSystem(object):
         at the given speed for the given number of seconds.
         """
 
+        start = time.time()
+        self.go(speed, speed)
+        # Note: using   time.sleep   to control the time to run is better.
+        # We do it with a WHILE loop here for pedagogical reasons.
+        while True:
+            if time.time() - start >= seconds:
+                self.stop()
+                break
     def go_straight_for_inches_using_time(self, inches, speed):
         """
         Makes the robot go straight at the given speed
         for the given number of inches, using the approximate
         conversion factor of 10.0 inches per second at 100 (full) speed.
         """
+        inperdeg = self.left_motor.WheelCircumference / 360  # turn circumference of the object to inches per degree
+        deg = inches / inperdeg  # degree=inches/inches per degree
+        self.left_motor.reset_position()
+        self.go(speed, speed)  # object go in speed
+        while True:  # if degree exceed the set, stop it
+            if abs(self.left_motor.get_position()) >= deg:
+                self.stop()
+                break
 
     def go_straight_for_inches_using_encoder(self, inches, speed):
         """
@@ -201,6 +217,7 @@ class ArmAndClaw(object):
     def raise_arm(self):
         self.motor.turn_on(100)
         while True:
+            print(self.motor.get_position())
             if self.touch_sensor.is_pressed():
                 self.motor.turn_off()
                 break
@@ -211,7 +228,9 @@ class ArmAndClaw(object):
         self.raise_arm()
         self.motor.reset_position()
         self.motor.turn_on(-100)
+        print('calibrating')
         while True:
+            print(self.motor.get_position())
             if abs(self.motor.get_position())>= 14.2*360:
                 self.motor.turn_off()
                 self.motor.reset_position()
