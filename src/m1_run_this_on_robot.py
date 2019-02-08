@@ -25,7 +25,9 @@ def main():
     # stop()
     # go_straight_for_seconds(10,70)
     # go_straight_for_inches_using_time(30, 50)
-    
+    # tone_make(100, 200)
+    # beep(10)
+    speak("say hello to my little friend")
 def run_test_arm():
     robot=rosebot.RoseBot()
     robot.arm_and_claw.raise_arm()
@@ -62,6 +64,18 @@ def real_run():
 
     while True:
         time.sleep(0.01)
+def tone_make(frequency, duration):
+    robot = rosebot.RoseBot()
+    robot.sound_system.tone_maker.play_tone(frequency,duration).wait()
+
+def beep(time):
+    robot = rosebot.RoseBot()
+    for k in range(time):
+        robot.sound_system.beeper.beep().wait()
+def speak(seq):
+    robot = rosebot.RoseBot()
+    robot.sound_system.speech_maker.speak(seq)
+
 
 
 # -----------------------------------------------------------------------------

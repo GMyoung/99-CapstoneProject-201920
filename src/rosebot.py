@@ -554,6 +554,7 @@ class Beeper(object):
     # Future enhancements: Add volume to all the SoundSystem classes.
     def __init__(self):
         self._beeper = ev3.Sound
+        self.beep()
 
     def beep(self):
         """
