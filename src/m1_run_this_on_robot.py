@@ -24,8 +24,8 @@ def main():
     # go(100, 50)
     # stop()
     # go_straight_for_seconds(10,70)
-    go_straight_for_inches_using_time(30, 50)
-
+    # go_straight_for_inches_using_time(30, 50)
+    
 def run_test_arm():
     robot=rosebot.RoseBot()
     robot.arm_and_claw.raise_arm()
