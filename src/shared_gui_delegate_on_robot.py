@@ -9,16 +9,25 @@
 import rosebot
 class ResponderToGUIMessages(object):
     def __init__(self,robot):
+        """
+
+        :type robot: rosebot.Rosebot
+        """
         self.robot = robot
     def go(self,left_wheel_speed, right_wheel_speed):
         left = int(left_wheel_speed)
         right = int(right_wheel_speed)
         self.robot.drive_system.go(left, right)
+    def stop(self):
+        self.robot.drive_system.stop()
     def raise_arm(self):
+        print('recieve raise arm')
         self.robot.arm_and_claw.raise_arm()
     def lower_arm(self):
+        print('recieve lower arm')
         self.robot.arm_and_claw.lower_arm()
     def calibrate_arm(self):
-        self.robot.arm_and_claw.caliberate_arm()
+        print('recieve calib arm')
+        self.robot.arm_and_claw.calibrate_arm()
     def move_arm_to_position(self,pos):
         self.robot.arm_and_claw.move_arm_to_position(int(pos))

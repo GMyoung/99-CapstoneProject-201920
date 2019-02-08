@@ -54,14 +54,14 @@ def go_straight_for_seconds(second, speed):
 def go_straight_for_inches_using_time(inch, speed):
     robot = rosebot.RoseBot()
     robot.drive_system.go_straight_for_inches_using_time(inch, speed)
-# def real_run():
-#     robot = rosebot.RoseBot()
-#     delegate = shared_gui_delegate_on_robot
-#     mqtt_receiver = com.MqttClient(delegate)
-#     mqtt_receiver.connect_to_pc()
-#
-#     while True:
-#         time.sleep(0.01)
+def real_run():
+    robot = rosebot.RoseBot()
+    delegate = shared_gui_delegate_on_robot
+    mqtt_receiver = com.MqttClient(delegate)
+    mqtt_receiver.connect_to_pc()
+
+    while True:
+        time.sleep(0.01)
 
 
 # -----------------------------------------------------------------------------

@@ -9,7 +9,6 @@ import rosebot
 import mqtt_remote_method_calls as com
 import time
 import shared_gui_delegate_on_robot
-import sys
 
 def main():
     """
@@ -19,18 +18,82 @@ def main():
     """
     real_run()
 
+
 def real_run():
     robot = rosebot.RoseBot()
-    delegate = shared_gui_delegate_on_robot
+    delegate = shared_gui_delegate_on_robot.ResponderToGUIMessages(robot)
     mqtt_receiver = com.MqttClient(delegate)
     mqtt_receiver.connect_to_pc()
 
     while True:
         time.sleep(0.01)
-        if mqtt_receiver.__getattribute__('quit'):
-            break
-        if mqtt_receiver.__getattribute__('exit'):
-            sys.exit()
+
+
+# def main():
+#     robot = rosebot.RoseBot()
+#     rc = RemoteControlEtc(robot)
+#     client = com.MqttClient(rc)
+#     client.connect_to_pc()
+#     rc.client = client
+#
+#     while True:
+#         if robot.color_sensor.get_color() == 6:
+#             time.sleep(1.5)
+#             robot.drive_system.turn_degrees(-95)
+#         if robot.proximity_sensor.get_distance_to_nearest_object() <= 10:
+#             ev3.Sound.speak('mission complete').wait()
+#             robot.drive_system.stop_moving()
+#         time.sleep(0.01)  # For the delegate to do its work
+    # real_run()
+    # run_test_arm()
+    # run_caliberate_arm()
+    # run_mov3_arm_to_position(5000)
+    # lower_arm()
+    # go(100, 50)
+    # stop()
+    # go_straight_for_seconds(10,70)
+    # go_straight_for_inches_using_time(30, 50)
+# class RemoteControlEtc(object):
+# def __init__(self, robot):
+#     """
+#
+#     Stores the robot.
+#       :type robot: rb.Snatch3rRobot
+#     """
+#     self.robot = robot
+#     self.client = None
+#     pass
+def run_test_arm():
+    robot=rosebot.RoseBot()
+    robot.arm_and_claw.raise_arm()
+
+def run_caliberate_arm():
+    robot=rosebot.RoseBot()
+    print('running')
+    robot.arm_and_claw.calibrate_arm()
+
+def run_mov3_arm_to_position(pos):
+    robot=rosebot.RoseBot()
+    robot.arm_and_claw.move_arm_to_position(pos)
+
+def lower_arm():
+    robot = rosebot.RoseBot()
+    robot.arm_and_claw.lower_arm()
+def go(left, right):
+    robot = rosebot.RoseBot()
+    robot.drive_system.go(left , right)
+def stop():
+    robot = rosebot.RoseBot()
+    robot.drive_system.stop()
+def go_straight_for_seconds(second, speed):
+    robot = rosebot.RoseBot()
+    robot.drive_system.go_straight_for_seconds(second, speed)
+def go_straight_for_inches_using_time(inch, speed):
+    robot = rosebot.RoseBot()
+    robot.drive_system.go_straight_for_inches_using_time(inch, speed)
+
+
+
 
 # -----------------------------------------------------------------------------
 # Calls  main  to start the ball rolling.
