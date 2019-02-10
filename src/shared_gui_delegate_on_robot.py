@@ -40,3 +40,12 @@ class ResponderToGUIMessages(object):
     def go_straight_for_degrees(self,inch,speed):
         print('recieve go straight for inches')
         self.robot.drive_system.go_straight_for_inches_using_encoder(inch,speed)
+    def beeper(self,time):
+        print('receive beeper')
+        self.robot.sound_system.beeper.beep(time)
+    def tone_make(self,frequency,duration):
+        print(('receive tone make'))
+        self.robot.sound_system.tone_maker.play_tone(frequency,duration)
+    def speech_make(self,phrase):
+        print("receive speech make")
+        self.robot.sound_system.speech_maker.speak(phrase)

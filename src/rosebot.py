@@ -554,9 +554,9 @@ class Beeper(object):
     # Future enhancements: Add volume to all the SoundSystem classes.
     def __init__(self):
         self._beeper = ev3.Sound
-        self.beep()
+        # self.beep()
 
-    def beep(self):
+    def beep(self,time):
         """
         Starts playing a BEEP sound.
 
@@ -570,7 +570,9 @@ class Beeper(object):
 
         :rtype subprocess.Popen
         """
-        return self._beeper.beep()
+        for k in range(time):
+            self._beeper.beep().wait()
+        # return self._beeper.beep()
 
 
 class ToneMaker(object):

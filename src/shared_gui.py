@@ -201,21 +201,40 @@ def get_control_frame(window, mqtt_sender):
 def get_sound_system(window,mqtt_sender):
     frame = ttk.Frame(window, padding=10, borderwidth=5, relief="ridge")
     frame.grid()
-    frame_label = ttk.Label(frame, text="Control")
-    beeper_label=ttk.Label(frame,text='beeper')
+    frame_label = ttk.Label(frame, text="Sound System")
+    beeper_label=ttk.Label(frame,text='time')
     tone_maker_frequency_label=ttk.Label(frame,text='frequency')
     tone_maker_duration_label=ttk.Label(frame,text='duration')
+    speech_label=ttk.Label(frame,text='enter your phrase')
+
+    beeper_entry = ttk.Entry(frame, width=8)
+    tone_maker_frequency_entry=ttk.Entry(frame, width=8)
+    tone_maker_duration_entry=ttk.Entry(frame,width=8)
+    speech_entry=ttk.Entry(frame,width=30)
+
 
 
     beeper_button=ttk.Button(frame,text='beeper')
     tone_maker_button=ttk.Button(frame,text='tone maker')
+    speech_button=ttk.Button(frame,text='speak')
 
     frame_label.grid(row=0,column=1)
-    # beeper_label.grid(row=1,column=0)
-    beeper_button.grid(row=1,column=1)
-    tone_maker_frequency_label.grid(row=2,column=1)
-    tone_maker_duration_label.grid(row=2,column=2)
+    beeper_label.grid(row=1,column=1)
+    beeper_button.grid(row=2,column=0)
+    beeper_entry.grid(row=2,column=1)
+    tone_maker_frequency_label.grid(row=3,column=1)
+    tone_maker_duration_label.grid(row=3,column=2)
+    tone_maker_button.grid(row=4,column=0)
+    tone_maker_frequency_entry.grid(row=4,column=1)
+    tone_maker_duration_entry.grid(row=4,column=2)
+    speech_label.grid(row=5,column=1)
+    speech_button.grid(row=6,column=0)
+    speech_entry.grid(row=6,column=1)
 
+
+    beeper_button["command"]=lambda :handle_beep(beeper_entry,mqtt_sender)
+    tone_maker_button["command"]=lambda :handle_tone(tone_maker_frequency_entry,tone_maker_duration_entry,mqtt_sender)
+    speech_button["command"]=lambda :handle_speech(speech_entry,mqtt_sender)
 
 
     return frame
@@ -371,3 +390,20 @@ def handle_exit(mqtt_sender):
     Then exit this program.
       :type mqtt_sender: com.MqttClient
     """
+
+
+
+def handle_beep(beeper_entry,mqtt_sender):
+    print('beeper')
+    mqtt_sender.send_message('beeper',[int(beeper_entry.get())])
+
+def handle_tone(frequency_entry,duration_entry,mqtt_sender):
+    print('tone making')
+    f=int(frequency_entry.get())
+    d=int(duration_entry.get())
+    mqtt_sender.send_message('tone_make',[f,d])
+
+def handle_speech(phrase,mqtt_sender):
+    print("speeking phrase")
+    phrase=phrase.get()
+    mqtt_sender.send_message('speech_make',[phrase])

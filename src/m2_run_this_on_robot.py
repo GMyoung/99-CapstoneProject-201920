@@ -95,6 +95,17 @@ def go_straight_for_inches_using_time(inch, speed):
 def go_straight_for_inches_using_encoder(inch, speed):
     robot = rosebot.RoseBot()
     robot.drive_system.go_straight_for_inches_using_encoder(inch, speed)
+def beeper(time):
+    robot = rosebot.RoseBot()
+    robot.sound_system.beeper.beep(time)
+def tone_make(frequency, duration):
+    robot = rosebot.RoseBot()
+    robot.sound_system.tone_maker.play_tone(frequency,duration).wait()
+
+
+def speak(str):
+    robot = rosebot.RoseBot()
+    robot.sound_system.speech_maker.speak(str)
 
 
 
