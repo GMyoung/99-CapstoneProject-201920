@@ -14,6 +14,7 @@ class ResponderToGUIMessages(object):
         :type robot: rosebot.Rosebot
         """
         self.robot = robot
+        self.stop_program=False
     def go(self,left_wheel_speed, right_wheel_speed):
         left = int(left_wheel_speed)
         right = int(right_wheel_speed)
@@ -49,3 +50,6 @@ class ResponderToGUIMessages(object):
     def speech_make(self,phrase):
         print("receive speech make")
         self.robot.sound_system.speech_maker.speak(phrase)
+    def quit(self):
+        self.stop_program=True
+
