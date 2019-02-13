@@ -407,3 +407,61 @@ def handle_speech(phrase,mqtt_sender):
     print("speeking phrase")
     phrase=phrase.get()
     mqtt_sender.send_message('speech_make',[phrase])
+def beep_while_go_frame(window, mqtt_sender):
+    frame = ttk.Frame(window, padding=10, borderwidth=5, relief="ridge")
+    frame.grid()
+
+    # Construct the widgets on the frame:
+    frame_label = ttk.Label(frame, text="Arm and Claw")
+    position_label = ttk.Label(frame, text="Desired arm position:")
+    position_entry = ttk.Entry(frame, width=8)
+
+    raise_arm_button = ttk.Button(frame, text="Raise arm")
+    lower_arm_button = ttk.Button(frame, text="Lower arm")
+    calibrate_arm_button = ttk.Button(frame, text="Calibrate arm")
+    move_arm_button = ttk.Button(frame,
+                                 text="Move arm to position (0 to 5112)")
+    blank_label = ttk.Label(frame, text="")
+
+    # Grid the widgets:
+    frame_label.grid(row=0, column=1)
+    position_label.grid(row=1, column=0)
+    position_entry.grid(row=1, column=1)
+    move_arm_button.grid(row=1, column=2)
+
+    blank_label.grid(row=2, column=1)
+    raise_arm_button.grid(row=3, column=0)
+    lower_arm_button.grid(row=3, column=1)
+    calibrate_arm_button.grid(row=3, column=2)
+
+    # Set the Button callbacks:
+    raise_arm_button["command"] = lambda: handle_raise_arm(mqtt_sender)
+    lower_arm_button["command"] = lambda: handle_lower_arm(mqtt_sender)
+    calibrate_arm_button["command"] = lambda: handle_calibrate_arm(mqtt_sender)
+    move_arm_button["command"] = lambda: handle_move_arm_to_position(
+        position_entry, mqtt_sender)
+    return frame
+def go_and_beep_frame(window, mqtt_sender):
+    frame = ttk.Frame(window, padding=10, borderwidth=5, relief="ridge")
+    frame.grid()
+    forward_button = ttk.Button(frame, text="chase object")
+    initial_label = ttk.Label(frame, text="initial speed(0 to 10)")
+    rate_label = ttk.Label(frame, text="beep rate(0 to 10)")
+    initial_speed_entry = ttk.Entry(frame, width=8)
+    initial_speed_entry.insert(0, "0")
+    set_speed_button = ttk.Button(frame, text="set speed")
+    rate_entry = ttk.Entry(frame, width=8)
+    rate_entry.insert(0, "0")
+    set_rate_button = ttk.Button(frame, text="set rate")
+    forward_button.grid(row=0, column=1)
+    initial_label.grid(row=1, column=0)
+    set_speed_button.grid(row = 1, column = 1)
+    initial_speed_entry.grid(row=1, column=2)
+    rate_entry.grid(row=2, column=2)
+    set_rate_button.grid(row=2, column = 1)
+    # forward_button["command"] = lambda: going_foward(mqtt_sender)
+    return frame
+
+# def going_foward:
+#     print("go_forward_until_distance_is_less_than()")
+#     mqtt
