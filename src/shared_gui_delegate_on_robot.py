@@ -52,6 +52,6 @@ class ResponderToGUIMessages(object):
         self.robot.sound_system.speech_maker.speak(phrase)
     def quit(self):
         self.stop_program=True
-    def go_foward_until(self):
-        print("let's make this robot find object")
-        self.robot.drive_system.go_forward_until_distance_is_less_than(1, 70)
+    def go_and_increase_frequency(self,speed,frequency_step):
+        print("receive go and increase frequency")
+        self.robot.drive_system.go_and_increase_frequency(speed,frequency_step)

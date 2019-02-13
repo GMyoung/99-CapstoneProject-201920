@@ -11,71 +11,161 @@ import mqtt_remote_method_calls as com
 import tkinter
 from tkinter import ttk
 import shared_gui
-
-
+import tkinter
+import mqtt_remote_method_calls as com
+import time
+from tkinter import ttk
 def main():
+    private_gui()
+    # shared_gui()
+
+def private_gui():
     """
-    This code, which must run on a LAPTOP:
-      1. Constructs a GUI for my part of the Capstone Project.
-      2. Communicates via MQTT with the code that runs on the EV3 robot.
-    """
+       This code, which must run on a LAPTOP:
+         1. Constructs a GUI for my part of the Capstone Project.
+         2. Communicates via MQTT with the code that runs on the EV3 robot.
+       """
     # -------------------------------------------------------------------------
     # Construct and connect the MQTT Client:
     # -------------------------------------------------------------------------
-    mqtt_sender=com.MqttClient()
+    mqtt_sender = com.MqttClient()
     mqtt_sender.connect_to_ev3()
 
     # -------------------------------------------------------------------------
     # The root TK object for the GUI:
     # -------------------------------------------------------------------------
-    root=tkinter.Tk()
+    root = tkinter.Tk()
     root.title("CSSE120 Capstone")
 
     # -------------------------------------------------------------------------
     # The main frame, upon which the other frames are placed.
     # -------------------------------------------------------------------------
-    main_frame=ttk.Frame(root,padding=10,borderwidth=5,relief='groove')
+    main_frame = ttk.Frame(root, padding=10, borderwidth=5, relief='groove')
     main_frame.grid()
 
-    # -------------------------------------------------------------------------
-    # Sub-frames for the shared GUI that the team developed:
-    # -------------------------------------------------------------------------
-    teleop_frame,arm_frame,control_frame,sound_frame=get_shared_frames(main_frame,mqtt_sender)
 
+    proximity_speed_label = ttk.Label(main_frame, text="speed")
+    proximity_speed_label.grid(row=0,column=1)
+    proximity_speed_entry = ttk.Entry(main_frame, width=8)
+    proximity_speed_entry.insert(0, "100")
+    proximity_speed_entry.grid(row=1,column=1)
 
-    # -------------------------------------------------------------------------
-    # Frames that are particular to my individual contributions to the project.
-    # -------------------------------------------------------------------------
-    # TODO: Implement and call get_my_frames(...)
+    proximity_frequency_label = ttk.Label(main_frame, text="increase by frequency")
+    proximity_frequency_label.grid(row=0,column=2)
+    proximity_frequency_entry = ttk.Entry(main_frame, width=8, justify=tkinter.RIGHT)
+    proximity_frequency_entry.insert(0, "10")
+    proximity_frequency_entry.grid(row=1,column=2)
 
-    # -------------------------------------------------------------------------
-    # Grid the frames.
-    # -------------------------------------------------------------------------
-    grid_frames(teleop_frame,arm_frame,control_frame,sound_frame)
+    proximity_button = ttk.Button(main_frame, text="proximity")
+    proximity_button.grid(row=1,column=0)
+    proximity_button ['command'] = lambda: mqtt_sender.send_message("go_and_increase_frequency",[int(proximity_speed_entry.get()),int(proximity_frequency_entry.get())])
+    # root.bind('<Up>', lambda event: print("Forward key"))
+    #
+    # left_button = ttk.Button(main_frame, text="Left")
+    # left_button.grid(row=4,column=1)
+    # left_button['command'] = lambda: print("Left button")
+    # root.bind('<Left>', lambda event: print("Left key"))
+    #
+    # stop_button = ttk.Button(main_frame, text="Stop")
+    # stop_button.grid(row=4,column=2)
+    # stop_button['command'] = lambda: print("Stop button")
+    # root.bind('<space>', lambda event: print("Stop key"))
+    #
+    # right_button = ttk.Button(main_frame, text="Right")
+    # right_button.grid(row=4,column=3)
+    # right_button['command'] = lambda: print("Right button")
+    # root.bind('<Right>', lambda event: print("Right key"))
+    #
+    # back_button = ttk.Button(main_frame, text="Back")
+    # back_button.grid(row=5,column=2)
+    # back_button['command'] = lambda: print("Back button")
+    # root.bind('<Down>', lambda event: print("Back key"))
+    #
+    # up_button = ttk.Button(main_frame, text="Up")
+    # up_button.grid(row=6,column=1)
+    # up_button['command'] = lambda: print("Up button")
+    # root.bind('<u>', lambda event: print("Up key"))
+    #
+    # down_button = ttk.Button(main_frame, text="Down")
+    # down_button.grid(row=7,column=1)
+    # down_button['command'] = lambda: print("Down button")
+    # root.bind('<j>', lambda event: print("Down key"))
+    #
+    # # Buttons for quit and exit
+    # q_button = ttk.Button(main_frame, text="Quit")
+    # q_button.grid(row=6,column=3)
+    # q_button['command'] = lambda: print("Quit button")
+    #
+    # e_button = ttk.Button(main_frame, text="Exit")
+    # e_button.grid(row=7,column=3)
+    # e_button['command'] = lambda: exit()
 
-    # -------------------------------------------------------------------------
-    # The event loop:
-    # -------------------------------------------------------------------------
     root.mainloop()
 
-
-def get_shared_frames(main_frame, mqtt_sender):
-    teleop_frame=shared_gui.get_teleoperation_frame(main_frame,mqtt_sender)
-    arm_frame=shared_gui.get_arm_frame(main_frame,mqtt_sender)
-    control_frame=shared_gui.get_control_frame(main_frame,mqtt_sender)
-    sound_frame=shared_gui.get_sound_system(main_frame,mqtt_sender)
-
-    return teleop_frame,arm_frame,control_frame,sound_frame
-
-
-def grid_frames(teleop_frame, arm_frame, control_frame,sound_frame):
-    teleop_frame.grid(row=0,column=0)
-    arm_frame.grid(row=1,column=0)
-    control_frame.grid(row=2, column=0)
-    sound_frame.grid(row=3,column=0)
-
-
-# -----------------------------------------------------------------------------
-# Calls  main  to start the ball rolling.
-# -----------------------------------------------------------------------------
+# def public_gui():
+#     """
+#     This code, which must run on a LAPTOP:
+#       1. Constructs a GUI for my part of the Capstone Project.
+#       2. Communicates via MQTT with the code that runs on the EV3 robot.
+#     """
+#     # -------------------------------------------------------------------------
+#     # Construct and connect the MQTT Client:
+#     # -------------------------------------------------------------------------
+#     mqtt_sender=com.MqttClient()
+#     mqtt_sender.connect_to_ev3()
+#
+#     # -------------------------------------------------------------------------
+#     # The root TK object for the GUI:
+#     # -------------------------------------------------------------------------
+#     root=tkinter.Tk()
+#     root.title("CSSE120 Capstone")
+#
+#     # -------------------------------------------------------------------------
+#     # The main frame, upon which the other frames are placed.
+#     # -------------------------------------------------------------------------
+#     main_frame=ttk.Frame(root,padding=10,borderwidth=5,relief='groove')
+#     main_frame.grid()
+#
+#     # -------------------------------------------------------------------------
+#     # Sub-frames for the shared GUI that the team developed:
+#     # -------------------------------------------------------------------------
+#     teleop_frame,arm_frame,control_frame,sound_frame=get_shared_frames(main_frame,mqtt_sender)
+#
+#
+#     # -------------------------------------------------------------------------
+#     # Frames that are particular to my individual contributions to the project.
+#     # -------------------------------------------------------------------------
+#     # TODO: Implement and call get_my_frames(...)
+#
+#     # -------------------------------------------------------------------------
+#     # Grid the frames.
+#     # -------------------------------------------------------------------------
+#     grid_frames(teleop_frame,arm_frame,control_frame,sound_frame)
+#
+#     # -------------------------------------------------------------------------
+#     # The event loop:
+#     # -------------------------------------------------------------------------
+#     root.mainloop()
+#
+#
+# def get_shared_frames(main_frame, mqtt_sender):
+#     teleop_frame=shared_gui.get_teleoperation_frame(main_frame,mqtt_sender)
+#     arm_frame=shared_gui.get_arm_frame(main_frame,mqtt_sender)
+#     control_frame=shared_gui.get_control_frame(main_frame,mqtt_sender)
+#     sound_frame=shared_gui.get_sound_system(main_frame,mqtt_sender)
+#
+#     return teleop_frame,arm_frame,control_frame,sound_frame
+#
+#
+# def grid_frames(teleop_frame, arm_frame, control_frame,sound_frame):
+#     teleop_frame.grid(row=0,column=0)
+#     arm_frame.grid(row=1,column=0)
+#     control_frame.grid(row=2, column=0)
+#     sound_frame.grid(row=3,column=0)
+#
+#
+#
+# # -----------------------------------------------------------------------------
+# # Calls  main  to start the ball rolling.
+# # -----------------------------------------------------------------------------
 main()
