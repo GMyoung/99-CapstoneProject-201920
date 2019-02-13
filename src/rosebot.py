@@ -71,25 +71,6 @@ class DriveSystem(object):
 
         self.wheel_circumference = 1.3 * math.pi
 
-    def display_camera_data(self):
-        """
-        Displays on the GUI the Blob data of the Blob that the camera sees
-        (if any).
-        """
-
-    def spin_clockwise_until_sees_object(self, speed, area):
-        """
-        Spins clockwise at the given speed until the camera sees an object
-        of the trained color whose area is at least the given area.
-        Requires that the user train the camera on the color of the object.
-        """
-
-    def spin_counterclockwise_until_sees_object(self, speed, area):
-        """
-        Spins counter-clockwise at the given speed until the camera sees an object
-        of the trained color whose area is at least the given area.
-        Requires that the user train the camera on the color of the object.
-        """
 
     # -------------------------------------------------------------------------
     # Methods for driving with no external sensor (just the built-in encoders).
@@ -284,14 +265,15 @@ class DriveSystem(object):
         Prints on the Console the Blob data of the Blob that the camera sees
         (if any).
         """
-        self.sensor_system.camera.get_biggest_blob()
+        print(self.sensor_system.camera.get_biggest_blob())
 
 
     def spin_clockwise_until_sees_object(self, speed, area):
         while True:
-            if self.sensor_system.camera.get_biggest_blob() <= area:
-                self.go(speed, speed*-1)
-        self.stop
+            if self.sensor_system.camera.get_biggest_blob() >= area:
+                self.stop()
+                break
+            self.go(speed, speed * -1)
 
         """
         Spins clockwise at the given speed until the camera sees an object
@@ -301,9 +283,10 @@ class DriveSystem(object):
 
     def spin_counterclockwise_until_sees_object(self, speed, area):
         while True:
-            if self.sensor_system.camera.get_biggest_blob() <= area:
-                self.go(speed*-1, speed)
-        self.stop
+            if self.sensor_system.camera.get_biggest_blob() >= area:
+                self.stop()
+                break
+            self.go(speed * -1, speed)
         """
         Spins counter-clockwise at the given speed until the camera sees an object
         of the trained color whose area is at least the given area.
