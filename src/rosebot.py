@@ -983,3 +983,4 @@ class BeaconButton(object):
 
 class BrickButton(object):
     pass
+
