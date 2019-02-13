@@ -51,30 +51,26 @@ def stop():
     robot = rosebot.RoseBot()
     robot.drive_system.stop()
 def go_straight_for_seconds(second, speed):
+    print('running')
     robot = rosebot.RoseBot()
     robot.drive_system.go_straight_for_seconds(second, speed)
 def go_straight_for_inches_using_time(inch, speed):
     robot = rosebot.RoseBot()
     robot.drive_system.go_straight_for_inches_using_time(inch, speed)
-def real_run():
+def go_straight_for_inches_using_encoder(inch, speed):
     robot = rosebot.RoseBot()
-    delegate = shared_gui_delegate_on_robot
-    mqtt_receiver = com.MqttClient(delegate)
-    mqtt_receiver.connect_to_pc()
-
-    while True:
-        time.sleep(0.01)
+    robot.drive_system.go_straight_for_inches_using_encoder(inch, speed)
+def beeper(time):
+    robot = rosebot.RoseBot()
+    robot.sound_system.beeper.beep(time)
 def tone_make(frequency, duration):
     robot = rosebot.RoseBot()
     robot.sound_system.tone_maker.play_tone(frequency,duration).wait()
 
-def beep(time):
+
+def speak(str):
     robot = rosebot.RoseBot()
-    for k in range(time):
-        robot.sound_system.beeper.beep().wait()
-def speak(seq):
-    robot = rosebot.RoseBot()
-    robot.sound_system.speech_maker.speak(seq)
+    robot.sound_system.speech_maker.speak(str)
 
 
 

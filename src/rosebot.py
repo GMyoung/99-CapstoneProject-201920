@@ -156,24 +156,46 @@ class DriveSystem(object):
     # -------------------------------------------------------------------------
 
     def go_straight_until_intensity_is_less_than(self, intensity, speed):
+        while True:
+            if self.sensor_system.color_sensor.get_ambient_light_intensity() < intensity:
+                self.stop()
+                break
+            self.go(speed, speed)
+
         """
         Goes straight at the given speed until the intensity returned
         by the color_sensor is less than the given intensity.
         """
 
     def go_straight_until_intensity_is_greater_than(self, intensity, speed):
+        while True:
+            if self.sensor_system.color_sensor.get_ambient_light_intensity() > intensity:
+                self.stop()
+                break
+            self.go(speed, speed)
         """
         Goes straight at the given speed until the intensity returned
         by the color_sensor is greater than the given intensity.
         """
 
     def go_straight_until_color_is(self, color, speed):
+        while True:
+            if self.sensor_system.color_sensor.get_color_as_name() == color:
+                self.stop()
+                break
+            self.go(speed, speed)
         """
         Goes straight at the given speed until the color returned
         by the color_sensor is equal to the given color.
         """
 
     def go_straight_until_color_is_not(self, color, speed):
+        while True:
+            if self.sensor_system.color_sensor.get_color_as_name() != color:
+                self.stop()
+                break
+            self.go(speed, speed)
+
         """
         Goes straight at the given speed until the color returned
         by the color_sensor is NOT equal to the given color.
@@ -183,12 +205,22 @@ class DriveSystem(object):
     # Methods for driving that use the infrared proximity sensor.
     # -------------------------------------------------------------------------
     def go_forward_until_distance_is_less_than(self, inches, speed):
+        while True:
+            if self.sensor_system.ir_proximity_sensor.get_distance_in_inches() < inches:
+                self.stop()
+                break
+            self.go(speed, speed)
         """
         Goes forward at the given speed until the robot is less than
         the given number of inches from the nearest object that it senses.
         """
 
     def go_backward_until_distance_is_greater_than(self, inches, speed):
+        while True:
+            if self.sensor_system.ir_proximity_sensor.get_distance_in_inches() > inches:
+                self.stop()
+                break
+            self.go(speed * -1, speed * -1)
         """
         Goes straight at the given speed until the robot is greater than
         the given number of inches from the nearest object that it senses.
@@ -197,6 +229,19 @@ class DriveSystem(object):
 
 
     def go_until_distance_is_within(self, delta, inches, speed):
+        distance = self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
+        while True:
+            if distance >= inches - delta and distance <= inches + delta:
+                self.stop()
+                break
+            elif distance <= inches - delta:
+                self.go(speed, speed)
+            elif distance >= inches + delta:
+                self.go(speed * -1, speed * -1)
+
+
+
+
         """
         Goes forward or backward, repeated as necessary, until the robot is
         within the given delta of the given inches from the nearest object
@@ -212,6 +257,7 @@ class DriveSystem(object):
     # -------------------------------------------------------------------------
 
     def spin_clockwise_until_beacon_heading_is_nonnegative(self, speed):
+
         """
         Spins clockwise at the given speed until the heading to the Beacon
         is nonnegative.  Requires that the user turn on the Beacon.

@@ -3,7 +3,7 @@
   Displays the Graphical User Interface (GUI) and communicates with the robot.
 
   Authors:  Your professors (for the framework)
-        and Yicheng Yang.
+    and Yicheng Yang.
   Winter term, 2018-2019.
 """
 
@@ -78,4 +78,3 @@ def grid_frames(teleop_frame, arm_frame, control_frame,sound_frame):
 # -----------------------------------------------------------------------------
 # Calls  main  to start the ball rolling.
 # -----------------------------------------------------------------------------
-main()
