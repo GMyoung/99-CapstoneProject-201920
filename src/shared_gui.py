@@ -460,9 +460,9 @@ def go_and_beep_frame(window, mqtt_sender):
     rate_entry.grid(row=2, column=2)
     rate_label.grid(row=2, column = 0)
     set_rate_button.grid(row=2, column = 1)
-    # forward_button["command"] = lambda: going_foward(mqtt_sender)
+    forward_button["command"] = lambda: going_foward(mqtt_sender)
     return frame
 
-# def going_foward(mqtt_sender):
-# #     print("go_foward_until")
-# #     mqtt_sender.send_message(go_foward_until)
+def going_foward(mqtt_sender):
+    print("go_foward_until")
+    mqtt_sender.send_message('go_foward_until')
