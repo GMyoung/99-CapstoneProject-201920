@@ -275,6 +275,41 @@ class DriveSystem(object):
         given number of inches from the Beacon.
         Assumes that the Beacon is turned on and placed straight ahead.
         """
+    # -------------------------------------------------------------------------
+    # Methods for driving that use the camera.
+    # -------------------------------------------------------------------------
+    def display_camera_data(self):
+
+        """
+        Prints on the Console the Blob data of the Blob that the camera sees
+        (if any).
+        """
+        self.sensor_system.camera.get_biggest_blob()
+
+
+    def spin_clockwise_until_sees_object(self, speed, area):
+        while True:
+            if self.sensor_system.camera.get_biggest_blob() <= area:
+                self.go(speed, speed*-1)
+        self.stop
+
+        """
+        Spins clockwise at the given speed until the camera sees an object
+        of the trained color whose area is at least the given area.
+        Requires that the user train the camera on the color of the object.
+        """
+
+    def spin_counterclockwise_until_sees_object(self, speed, area):
+        while True:
+            if self.sensor_system.camera.get_biggest_blob() <= area:
+                self.go(speed*-1, speed)
+        self.stop
+        """
+        Spins counter-clockwise at the given speed until the camera sees an object
+        of the trained color whose area is at least the given area.
+        Requires that the user train the camera on the color of the object.
+        """
+
 
 ###############################################################################
 #    ArmAndClaw
