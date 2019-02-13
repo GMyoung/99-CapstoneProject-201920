@@ -54,4 +54,4 @@ class ResponderToGUIMessages(object):
         self.stop_program=True
     def go_foward_until(self):
         print("let's make this robot find object")
-        self.robot.drive_system.go_forward_until_distance_is_less_than(2, 40)
+        self.robot.drive_system.go_forward_until_distance_is_less_than(1, 70)
