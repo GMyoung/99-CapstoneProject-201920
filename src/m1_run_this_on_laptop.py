@@ -44,18 +44,62 @@ def private_gui():
     rate_label = ttk.Label(frame, text="beep rate(0 to 10)")
     initial_speed_entry = ttk.Entry(frame, width=8)
     initial_speed_entry.insert(0, "0")
-    set_speed_button = ttk.Button(frame, text="set speed")
     rate_entry = ttk.Entry(frame, width=8)
     rate_entry.insert(0, "0")
-    set_rate_button = ttk.Button(frame, text="set rate")
     forward_button.grid(row=0, column=1)
     initial_label.grid(row=1, column=0)
-    set_speed_button.grid(row=1, column=1)
     initial_speed_entry.grid(row=1, column=2)
     rate_entry.grid(row=2, column=2)
     rate_label.grid(row=2, column=0)
-    set_rate_button.grid(row=2, column=1)
     forward_button["command"] = lambda: going_foward(mqtt_sender, initial_speed_entry, rate_entry)
+    stop_button = ttk.Button(frame, text='stop')
+    stop_button.grid(row=0, column=1)
+    stop_button['command'] = lambda: handle_stop(mqtt_sender)
+
+    camera_clock_label = ttk.Label(frame, text="cw=0, ccw=1")
+    camera_clock_label.grid(row=3, column=1)
+    camera_clock_entry = ttk.Entry(frame, width=8)
+    camera_clock_entry.grid(row=4, column=1)
+    camera_speed_label = ttk.Label(frame, text="speed")
+    camera_speed_label.grid(row=3, column=2)
+    camera_speed_entry = ttk.Entry(frame, width=8)
+    camera_speed_entry.grid(row=4, column=2)
+    camera_button = ttk.Button(frame, text='camera')
+    camera_button.grid(row=4, column=0)
+    camera_button['command'] = lambda: mqtt_sender.send_message("go_and_pick", [int(camera_clock_entry.get()),
+                                                                                int(camera_speed_entry.get())])
+
+    proximity_go_inch_label = ttk.Label(frame, text='inch')
+    proximity_go_inch_label.grid(row=5, column=0)
+    proximity_go_inch_entry = ttk.Entry(frame, width=8)
+    proximity_go_inch_entry.grid(row=6, column=0)
+    proximity_go_speed_label = ttk.Label(frame, text='speed')
+    proximity_go_speed_label.grid(row=5, column=1)
+    proximity_go_speed_entry = ttk.Entry(frame, width=8)
+    proximity_go_speed_entry.grid(row=6, column=1)
+    proximity_go_delta_label = ttk.Label(frame, text='delta')
+    proximity_go_delta_label.grid(row=5, column=2)
+    proximity_go_delta_entry = ttk.Entry(frame, width=8)
+    proximity_go_delta_entry.grid(row=6, column=2)
+    proximity_go_less = ttk.Button(frame, text='go until less')
+    proximity_go_less.grid(row=7, column=0)
+    proximity_go_less['command'] = lambda: mqtt_sender.send_message("go_less", [int(proximity_go_inch_entry.get()),
+                                                                                int(proximity_go_speed_entry.get())])
+    proximity_go_great = ttk.Button(frame, text='go until greater')
+    proximity_go_great.grid(row=7, column=1)
+    proximity_go_great['command'] = lambda: mqtt_sender.send_message("go_greater", [int(proximity_go_inch_entry.get()),
+                                                                                    int(
+                                                                                        proximity_go_speed_entry.get())])
+    proximity_go_within = ttk.Button(frame, text='go until within')
+    proximity_go_within.grid(row=7, column=2)
+    proximity_go_within['command'] = lambda: mqtt_sender.send_message("go_within", [int(proximity_go_delta_entry.get()),
+                                                                                    int(proximity_go_inch_entry.get()),
+                                                                                    int(
+                                                                                        proximity_go_speed_entry.get())])
+
+    proximity_speed_label = ttk.Label(frame, text="speed")
+    proximity_speed_label.grid(row=1, column=1)
+
 
 
     root.mainloop()
@@ -98,7 +142,7 @@ def going_foward(mqtt_sender, initial_speed_entry, rate_entry):
 #     # -------------------------------------------------------------------------
 #     # Frames that are particular to my individual contributions to the project.
 #     # -------------------------------------------------------------------------
-#     # TODO: Implement and call get_my_frames(...)
+#     # Done: Implement and call get_my_frames(...)
 #
 #     # -------------------------------------------------------------------------
 #     # Grid the frames.
@@ -130,4 +174,7 @@ def going_foward(mqtt_sender, initial_speed_entry, rate_entry):
 # -----------------------------------------------------------------------------
 # Calls  main  to start the ball rolling.
 # -----------------------------------------------------------------------------
+def handle_stop(mqtt_sender):
+    print("Stop")
+    mqtt_sender.send_message('quit',[] )
 main()
