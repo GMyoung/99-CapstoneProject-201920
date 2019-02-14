@@ -20,6 +20,7 @@ class ResponderToGUIMessages(object):
         right = int(right_wheel_speed)
         self.robot.drive_system.go(left, right)
     def stop(self):
+        print('receive stop')
         self.robot.drive_system.stop()
     def raise_arm(self):
         print('recieve raise arm')
@@ -52,6 +53,26 @@ class ResponderToGUIMessages(object):
         self.robot.sound_system.speech_maker.speak(phrase)
     def quit(self):
         self.stop_program=True
-    def go_foward_until(self):
-        print("let's make this robot find object")
-        self.robot.drive_system.go_forward_until_distance_is_less_than(1, 70)
+    def go_and_increase_frequency(self,speed,frequency_step):
+        print("receive go and increase frequency")
+        self.robot.drive_system.go_and_increase_frequency(speed,frequency_step)
+
+    def go_foward_until(self,speed, rate):
+        print("let this robot start to find object")
+        self.robot.drive_system.go_and_increase_beep(int(speed),int(rate))
+
+    def go_less(self, inches, speed):
+        print("receive go less")
+        self.robot.drive_system.go_forward_until_distance_is_less_than(inches, speed)
+
+    def go_greater(self, inches, speed):
+        print("receive go greater")
+        self.robot.drive_system.go_backward_until_distance_is_greater_than(inches, speed)
+
+    def go_within(self, delta, inches, speed):
+        print("receive go within")
+        self.robot.drive_system.go_until_distance_is_within(delta, inches, speed)
+
+    def go_and_pick(self, clock, speed):
+        print("receive go_and_pick")
+        self.robot.drive_system.go_and_pick(int(clock), int(speed))

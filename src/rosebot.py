@@ -32,13 +32,15 @@ class RoseBot(object):
         self.sensor_system = SensorSystem()
         self.sound_system = SoundSystem()
         self.led_system = LEDSystem()
-        self.drive_system = DriveSystem(self.sensor_system)
+
         self.arm_and_claw = ArmAndClaw(self.sensor_system.touch_sensor)
+        self.drive_system = DriveSystem(self.sensor_system, self.arm_and_claw,self.sound_system)
         self.beacon_system = BeaconSystem()
         self.display_system = DisplaySystem()
 
+
 ###############################################################################
-#    DriveSystem
+#    DriveSystem#
 ###############################################################################
 class DriveSystem(object):
 
@@ -59,16 +61,18 @@ class DriveSystem(object):
     #          (i.e., left motor goes at speed -S, right motor at speed S).
     # -------------------------------------------------------------------------
 
-    def __init__(self, sensor_system):
+    def __init__(self, sensor_system,arm_and_claw,sound_system = None):
         """
         Stores the given SensorSystem object.
         Constructs two Motors (for the left and right wheels).
           :type sensor_system:  SensorSystem
+          :type arm_and_claw:  ArmAndClaw
         """
         self.sensor_system = sensor_system
         self.left_motor = Motor('B')
         self.right_motor = Motor('C')
-
+        self.arm_and_claw=arm_and_claw
+        self.sound_system = sound_system
         self.wheel_circumference = 1.3 * math.pi
 
 
@@ -187,9 +191,10 @@ class DriveSystem(object):
     # -------------------------------------------------------------------------
     def go_forward_until_distance_is_less_than(self, inches, speed):
         while True:
-            if self.sensor_system.ir_proximity_sensor.get_distance_in_inches() < inches:
+            dist=self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
+            print(dist)
+            if dist< inches:
                 self.stop()
-                print(self.sensor_system.ir_proximity_sensor.get_distance_in_inches())
                 break
             self.go(speed, speed)
         """
@@ -199,6 +204,7 @@ class DriveSystem(object):
 
     def go_backward_until_distance_is_greater_than(self, inches, speed):
         while True:
+            print(self.sensor_system.ir_proximity_sensor.get_distance_in_inches() )
             if self.sensor_system.ir_proximity_sensor.get_distance_in_inches() > inches:
                 self.stop()
                 break
@@ -211,8 +217,9 @@ class DriveSystem(object):
 
 
     def go_until_distance_is_within(self, delta, inches, speed):
-        distance = self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
+
         while True:
+            distance = self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
             if distance >= inches - delta and distance <= inches + delta:
                 self.stop()
                 break
@@ -233,6 +240,52 @@ class DriveSystem(object):
         the robot should move until it is between 6.8 and 7.4 inches
         from the object.
         """
+    def go_and_increase_frequency(self,speed,frequency_step):
+        robot=RoseBot()
+        init_distance=99999
+        frequency=10
+        # Infrared=InfraredProximitySensor()
+        # ToneMaker().play_tone(frequency, 1000)
+        while True:
+            self.go(speed,speed)
+            distance = self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
+            if distance<init_distance:
+                print(frequency)
+                frequency = frequency + frequency_step
+                init_distance=distance
+            ToneMaker().play_tone(frequency, 1000)
+            if distance< 3:
+                self.stop()
+                break
+
+    def go_and_pick(self,clock,speed):
+        # camera=
+        blob=self.sensor_system.camera.get_biggest_blob()
+        area=blob.get_area()
+        print(blob)
+        if clock==0:
+            self.spin_clockwise_until_sees_object(speed,20)
+
+        else:
+            self.spin_counterclockwise_until_sees_object(speed, 20)
+        self.go_and_increase_beep(speed,100)
+        self.arm_and_claw.raise_arm()
+
+    def go_and_increase_beep(self,speed,frequency_step):
+        init_distance=99999
+        frequency=10
+        while True:
+            self.go(speed,speed)
+            distance = self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
+            if distance<init_distance:
+                print(frequency)
+                frequency = frequency + frequency_step
+                init_distance=distance
+            self.sound_system.beeper.beep(1)
+            time.sleep(10/frequency)
+            if distance< 20:
+                self.stop()
+                break
 
     # -------------------------------------------------------------------------
     # Methods for driving that use the infrared beacon sensor.
@@ -271,10 +324,10 @@ class DriveSystem(object):
 
     def spin_clockwise_until_sees_object(self, speed, area):
         while True:
-            if self.sensor_system.camera.get_biggest_blob() >= area:
-                self.stop()
+            B = self.sensor_system.camera.get_biggest_blob()
+            self.go(speed, -speed)
+            if B.get_area() > area:
                 break
-            self.go(speed, speed * -1)
 
         """
         Spins clockwise at the given speed until the camera sees an object
@@ -284,10 +337,10 @@ class DriveSystem(object):
 
     def spin_counterclockwise_until_sees_object(self, speed, area):
         while True:
-            if self.sensor_system.camera.get_biggest_blob() >= area:
-                self.stop()
+            B = self.sensor_system.camera.get_biggest_blob()
+            self.go(-speed, speed)
+            if B.get_area() > area:
                 break
-            self.go(speed * -1, speed)
         """
         Spins counter-clockwise at the given speed until the camera sees an object
         of the trained color whose area is at least the given area.
@@ -391,7 +444,7 @@ class SensorSystem(object):
         self.touch_sensor = TouchSensor(1)
         self.color_sensor = ColorSensor(3)
         self.ir_proximity_sensor = InfraredProximitySensor(4)
-        # self.camera = Camera()
+        self.camera = Camera()
         # self.ir_beacon_sensor = InfraredBeaconSensor(4)
         # self.beacon_system =
         # self.display_system =

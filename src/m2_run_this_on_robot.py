@@ -110,7 +110,9 @@ def speak(str):
     robot.sound_system.speech_maker.speak(str)
 
 
-
+def go_and_increase_frequency(speed,frequency_step):
+    robot = rosebot.RoseBot()
+    robot.drive_system.go_and_increase_frequency(speed,frequency_step)
 
 # -----------------------------------------------------------------------------
 # Calls  main  to start the ball rolling.
