@@ -270,7 +270,20 @@ class DriveSystem(object):
         self.go_and_increase_frequency(speed,100)
         self.arm_and_claw.raise_arm()
 
-
+    def go_and_increase_beep(self,speed,frequency_step):
+        robot=RoseBot()
+        init_distance=99999
+        frequency=10
+        # Infrared=InfraredProximitySensor()
+        # ToneMaker().play_tone(frequency, 1000)
+        while True:
+            self.go(speed,speed)
+            distance = self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
+            if distance<init_distance:
+                print(frequency)
+                frequency = frequency + frequency_step
+                init_distance=distance
+            Beeper.beep(frequency)
 
     # -------------------------------------------------------------------------
     # Methods for driving that use the infrared beacon sensor.
