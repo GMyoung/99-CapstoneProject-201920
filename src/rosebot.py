@@ -34,7 +34,7 @@ class RoseBot(object):
         self.led_system = LEDSystem()
 
         self.arm_and_claw = ArmAndClaw(self.sensor_system.touch_sensor)
-        self.drive_system = DriveSystem(self.sensor_system, self.arm_and_claw)
+        self.drive_system = DriveSystem(self.sensor_system, self.arm_and_claw,self.sound_system)
         self.beacon_system = BeaconSystem()
         self.display_system = DisplaySystem()
 
@@ -61,7 +61,7 @@ class DriveSystem(object):
     #          (i.e., left motor goes at speed -S, right motor at speed S).
     # -------------------------------------------------------------------------
 
-    def __init__(self, sensor_system,arm_and_claw):
+    def __init__(self, sensor_system,arm_and_claw,sound_system = None):
         """
         Stores the given SensorSystem object.
         Constructs two Motors (for the left and right wheels).
@@ -72,7 +72,7 @@ class DriveSystem(object):
         self.left_motor = Motor('B')
         self.right_motor = Motor('C')
         self.arm_and_claw=arm_and_claw
-
+        self.sound_system = sound_system
         self.wheel_circumference = 1.3 * math.pi
 
 
@@ -262,20 +262,18 @@ class DriveSystem(object):
         # camera=
         blob=self.sensor_system.camera.get_biggest_blob()
         area=blob.get_area()
+        print(blob)
         if clock==0:
             self.spin_clockwise_until_sees_object(speed,20)
 
         else:
-            self.spin_clockwise_until_sees_object(speed, 20)
-        self.go_and_increase_frequency(speed,100)
+            self.spin_counterclockwise_until_sees_object(speed, 20)
+        self.go_and_increase_beep(speed,100)
         self.arm_and_claw.raise_arm()
 
     def go_and_increase_beep(self,speed,frequency_step):
-        robot=RoseBot()
         init_distance=99999
         frequency=10
-        # Infrared=InfraredProximitySensor()
-        # ToneMaker().play_tone(frequency, 1000)
         while True:
             self.go(speed,speed)
             distance = self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
@@ -283,7 +281,11 @@ class DriveSystem(object):
                 print(frequency)
                 frequency = frequency + frequency_step
                 init_distance=distance
-            Beeper.beep(frequency)
+            self.sound_system.beeper.beep(1)
+            time.sleep(10/frequency)
+            if distance< 20:
+                self.stop()
+                break
 
     # -------------------------------------------------------------------------
     # Methods for driving that use the infrared beacon sensor.

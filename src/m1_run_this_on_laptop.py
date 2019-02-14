@@ -46,7 +46,7 @@ def private_gui():
     initial_speed_entry.insert(0, "0")
     rate_entry = ttk.Entry(frame, width=8)
     rate_entry.insert(0, "0")
-    forward_button.grid(row=0, column=1)
+    forward_button.grid(row=0, column=0)
     initial_label.grid(row=1, column=0)
     initial_speed_entry.grid(row=1, column=2)
     rate_entry.grid(row=2, column=2)
@@ -99,8 +99,6 @@ def private_gui():
 
     proximity_speed_label = ttk.Label(frame, text="speed")
     proximity_speed_label.grid(row=1, column=1)
-
-
 
     root.mainloop()
 
