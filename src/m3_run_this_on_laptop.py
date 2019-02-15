@@ -3,7 +3,7 @@
   Displays the Graphical User Interface (GUI) and communicates with the robot.
 
   Authors:  Your professors (for the framework)
-    and Yicheng Yang.
+    and Zhen Yang.
   Winter term, 2018-2019.
 """
 
@@ -41,7 +41,7 @@ def private_gui():
     frame.grid()
     forward_button = ttk.Button(frame, text="chase object")
     initial_label = ttk.Label(frame, text="initial speed(0 to 10)")
-    rate_label = ttk.Label(frame, text="beep rate(0 to 10)")
+    rate_label = ttk.Label(frame, text="led rate(0 to 10)")
     initial_speed_entry = ttk.Entry(frame, width=8)
     initial_speed_entry.insert(0, "0")
     rate_entry = ttk.Entry(frame, width=8)
