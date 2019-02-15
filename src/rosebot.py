@@ -310,7 +310,7 @@ class DriveSystem(object):
             self.led_system.left_led.turn_off()
             self.led_system.right_led.turn_off()
             time.sleep(10/frequency)
-            if distance< 20:
+            if distance< 3:
                 self.stop()
                 break
 
