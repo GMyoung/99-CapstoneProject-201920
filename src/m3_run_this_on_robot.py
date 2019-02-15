@@ -1,112 +1,92 @@
 """
-  Capstone Project.  Code to run on a LAPTOP (NOT the robot).
-  Displays the Graphical User Interface (GUI) and communicates with the robot.
-
-  Authors:  Your professors (for the framework)
-    and Zhen Yang.
+  Capstone Project.  Code to run on the EV3 robot (NOT on a laptop).
+  Author:  Your professors (for the framework)
+    and Yicheng Yang..
   Winter term, 2018-2019.
 """
 
-import mqtt_remote_method_calls as com
-import tkinter
-from tkinter import ttk
-import shared_gui
-import time
 import rosebot
-
-
+import mqtt_remote_method_calls as com
+import time
+import shared_gui_delegate_on_robot
 
 def main():
     """
-    This code, which must run on a LAPTOP:
-      1. Constructs a GUI for my part of the Capstone Project.
-      2. Communicates via MQTT with the code that runs on the EV3 robot.
+    This code, which must run on the EV3 ROBOT:
+      1. Makes the EV3 robot to various things.
+      2. Communicates via MQTT with the GUI code that runs on the LAPTOP.
     """
-    # -------------------------------------------------------------------------
-    # Construct and connect the MQTT Client:
-    # -------------------------------------------------------------------------
-    mqtt_sender=com.MqttClient()
-    mqtt_sender.connect_to_ev3()
+    real_run()
+    # run_test_arm()
+    # run_caliberate_arm()
+    # run_mov3_arm_to_position(5000)
+    # lower_arm()
+    # go(100, 50)
+    # stop()
+    # go_straight_for_seconds(10,70)
+    # go_straight_for_inches_using_time(30, 50)
+    # tone_make(100, 200)
+    # beep(10)
+    speak("say hello to my little friend")
 
-    # -------------------------------------------------------------------------
-    # The root TK object for the GUI:
-    # -------------------------------------------------------------------------
-    root=tkinter.Tk()
-    root.title("CSSE120 Capstone")
+def real_run():
+    robot = rosebot.RoseBot()
+    delegate = shared_gui_delegate_on_robot.ResponderToGUIMessages(robot)
+    mqtt_receiver = com.MqttClient(delegate)
+    mqtt_receiver.connect_to_pc()
 
-    # -------------------------------------------------------------------------
-    # The main frame, upon which the other frames are placed.
-    # -------------------------------------------------------------------------
-    main_frame=ttk.Frame(root,padding=10,borderwidth=5,relief='groove')
-    main_frame.grid()
-
-    # -------------------------------------------------------------------------
-    # Sub-frames for the shared GUI that the team developed:
-    # -------------------------------------------------------------------------
-    teleop_frame,arm_frame,control_frame,sound_frame,go_and_beep_frame=get_shared_frames(main_frame,mqtt_sender)
-
-
-    # -------------------------------------------------------------------------
-    # Frames that are particular to my individual contributions to the project.
-    # -------------------------------------------------------------------------
-    # TODO: Implement and call get_my_frames(...)
-
-    # -------------------------------------------------------------------------
-    # Grid the frames.
-    # -------------------------------------------------------------------------
-    grid_frames(teleop_frame,arm_frame,control_frame,sound_frame,go_and_beep_frame)
-
-    # -------------------------------------------------------------------------
-    # The event loop:
-    # -------------------------------------------------------------------------
-    root.mainloop()
-
-
-def get_shared_frames(main_frame, mqtt_sender):
-    teleop_frame=shared_gui.get_teleoperation_frame(main_frame,mqtt_sender)
-    arm_frame=shared_gui.get_arm_frame(main_frame,mqtt_sender)
-    control_frame=shared_gui.get_control_frame(main_frame,mqtt_sender)
-    sound_frame=shared_gui.get_sound_system(main_frame,mqtt_sender)
-    go_and_beep_frame = shared_gui.go_and_beep_frame(main_frame,mqtt_sender)
-    return teleop_frame,arm_frame,control_frame,sound_frame,go_and_beep_frame
-
-
-def grid_frames(teleop_frame, arm_frame, control_frame,sound_frame,go_and_beep_frame):
-    teleop_frame.grid(row=0,column=0)
-    arm_frame.grid(row=1,column=0)
-    control_frame.grid(row=2, column=0)
-    sound_frame.grid(row=3,column=0)
-    go_and_beep_frame.grid(row = 3, column = 1)
-
-
-def app(initial, rate):
-    n = initial
-    s = rate
-    # initial = n second per cycle
-    # rate = - s second per cycle
-    bot = rosebot
     while True:
-        light_left = rosebot.LED(left_or_right='left')
-        light_right = rosebot.LED(left_or_right='right')
-        light_left.turn_on()
-        time.sleep(n / 4)
-        light_left.turn_off()
-        light_right.turn_on()
-        time.sleep(n / 4)
-        light_right.turn_off()
-        light_right.turn_on()
-        light_left.turn_on()
-        time.sleep(n / 4)
-        light_left.turn_off()
-        light_right.turn_off()
-        time.sleep(n / 4)
-        n = n - s
-        if rosebot.DriveSystem.go_forward_until_distance_is_less_than(Drivesystem, 2, 40):
+        if delegate.stop_program:
             break
+        time.sleep(0.01)
+
+def run_test_arm():
+    robot=rosebot.RoseBot()
+    robot.arm_and_claw.raise_arm()
+
+def run_caliberate_arm():
+    robot=rosebot.RoseBot()
+    print('running')
+    robot.arm_and_claw.calibrate_arm()
+
+def run_mov3_arm_to_position(pos):
+    robot=rosebot.RoseBot()
+    robot.arm_and_claw.move_arm_to_position(pos)
+
+def lower_arm():
+    robot = rosebot.RoseBot()
+    robot.arm_and_claw.lower_arm()
+def go(left, right):
+    robot = rosebot.RoseBot()
+    robot.drive_system.go(left , right)
+def stop():
+    robot = rosebot.RoseBot()
+    robot.drive_system.stop()
+def go_straight_for_seconds(second, speed):
+    print('running')
+    robot = rosebot.RoseBot()
+    robot.drive_system.go_straight_for_seconds(second, speed)
+def go_straight_for_inches_using_time(inch, speed):
+    robot = rosebot.RoseBot()
+    robot.drive_system.go_straight_for_inches_using_time(inch, speed)
+def go_straight_for_inches_using_encoder(inch, speed):
+    robot = rosebot.RoseBot()
+    robot.drive_system.go_straight_for_inches_using_encoder(inch, speed)
+def beeper(time):
+    robot = rosebot.RoseBot()
+    robot.sound_system.beeper.beep(time)
+def tone_make(frequency, duration):
+    robot = rosebot.RoseBot()
+    robot.sound_system.tone_maker.play_tone(frequency,duration).wait()
+
+
+def speak(str):
+    robot = rosebot.RoseBot()
+    robot.sound_system.speech_maker.speak(str)
+
 
 
 # -----------------------------------------------------------------------------
 # Calls  main  to start the ball rolling.
 # -----------------------------------------------------------------------------
 main()
-

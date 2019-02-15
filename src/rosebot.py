@@ -31,10 +31,10 @@ class RoseBot(object):
     def __init__(self):
         self.sensor_system = SensorSystem()
         self.sound_system = SoundSystem()
-        self.led_system = LEDSystem()
+        self.led_system = LEDSystem
 
         self.arm_and_claw = ArmAndClaw(self.sensor_system.touch_sensor)
-        self.drive_system = DriveSystem(self.sensor_system, self.arm_and_claw,self.sound_system)
+        self.drive_system = DriveSystem(self.sensor_system, self.arm_and_claw,self.sound_system,self.led_system)
         self.beacon_system = BeaconSystem()
         self.display_system = DisplaySystem()
 
@@ -61,7 +61,7 @@ class DriveSystem(object):
     #          (i.e., left motor goes at speed -S, right motor at speed S).
     # -------------------------------------------------------------------------
 
-    def __init__(self, sensor_system,arm_and_claw,sound_system = None):
+    def __init__(self, sensor_system,arm_and_claw,sound_system = None, led_system = None):
         """
         Stores the given SensorSystem object.
         Constructs two Motors (for the left and right wheels).
@@ -73,6 +73,7 @@ class DriveSystem(object):
         self.right_motor = Motor('C')
         self.arm_and_claw=arm_and_claw
         self.sound_system = sound_system
+        self.led_system = led_system
         self.wheel_circumference = 1.3 * math.pi
 
 
@@ -282,6 +283,32 @@ class DriveSystem(object):
                 frequency = frequency + frequency_step
                 init_distance=distance
             self.sound_system.beeper.beep(1)
+            time.sleep(10/frequency)
+            if distance< 20:
+                self.stop()
+                break
+
+    def go_and_changing_led(self,speed,frequency_step):
+        init_distance=99999
+        frequency=10
+        while True:
+            self.go(speed,speed)
+            distance = self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
+            if distance<init_distance:
+                print(frequency)
+                frequency = frequency + frequency_step
+                init_distance=distance
+            self.led_system.LED('left').turn_on()
+            time.sleep(10/frequency)
+            self.led_system.LED('left').turn_off()
+            self.led_system.LED('right').turn_on()
+            time.sleep(10/frequency)
+            self.led_system.LED('right').turn_off()
+            self.led_system.LED('left').turn_on()
+            self.led_system.Led('right').turn_on()
+            time.sleep(10/frequency)
+            self.led_system.LED('left').turn_off()
+            self.led_system.LED('right').turn_off()
             time.sleep(10/frequency)
             if distance< 20:
                 self.stop()

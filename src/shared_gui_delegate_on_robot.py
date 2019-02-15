@@ -76,3 +76,7 @@ class ResponderToGUIMessages(object):
     def go_and_pick(self, clock, speed):
         print("receive go_and_pick")
         self.robot.drive_system.go_and_pick(int(clock), int(speed))
+
+    def go_and_changing_led(self, speed, frequency_step):
+        print("receive go_and_changing_led")
+        self.robot.drive_system.go_and_changing_led(int(speed), int(frequency_step))
