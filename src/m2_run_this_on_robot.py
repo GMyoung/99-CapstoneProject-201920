@@ -20,7 +20,7 @@ def main():
 
 
 def real_run():
-    robot = rosebot.RoseBot()
+    robot = rosebot.m2_RoseBot()
     delegate = shared_gui_delegate_on_robot.ResponderToGUIMessages(robot)
     mqtt_receiver = com.MqttClient(delegate)
     mqtt_receiver.connect_to_pc()
