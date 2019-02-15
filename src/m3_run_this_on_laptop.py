@@ -102,11 +102,11 @@ def private_gui():
 
     root.mainloop()
 
-def going_foward(mqtt_sender, initial_speed_entry, rate_entry):
+def going_foward(mqtt_sender, initial_speed_entry, frequency_step):
     print("go_foward_until")
     speed = initial_speed_entry.get()
-    rate_entry = rate_entry.get()
-    mqtt_sender.send_message('go_foward_until', [speed, rate_entry])
+    frequency_step = frequency_step.get()
+    mqtt_sender.send_message('go_and_changing_led', [speed, frequency_step])
 # def main():
 #     """
 #     This code, which must run on a LAPTOP:
