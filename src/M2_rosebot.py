@@ -27,7 +27,7 @@ import math
 #   Use those sub-systems (and their instance variables)
 #   to make the RoseBot (and its associated Snatch3r robot) do things.
 ###############################################################################
-class m2_RoseBot(object):
+class RoseBot(object):
     def __init__(self):
         self.sensor_system = SensorSystem()
         self.sound_system = SoundSystem()
@@ -269,6 +269,22 @@ class DriveSystem(object):
             self.spin_clockwise_until_sees_object(speed, 20)
         self.go_and_increase_frequency(speed,100)
         self.arm_and_claw.raise_arm()
+    # def stop_when_see_color(self):
+    #     while True:
+    #         self.go(50,50)
+    #
+    #         color=self.sensor_system.color_sensor.get_color_as_name()
+    #         if color!='black':
+    #             self.stop()
+    #             break
+    def stop_when_see_color(self):
+        while True:
+           self.go(50,50)
+           if self.sensor_system.color_sensor.get_reflected_:
+                self.stop()
+                break
+
+
 
 
 
@@ -1021,3 +1037,4 @@ class BeaconButton(object):
 
 class BrickButton(object):
     pass
+
