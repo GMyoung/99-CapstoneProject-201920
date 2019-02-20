@@ -5,10 +5,10 @@
   Winter term, 2018-2019.
 """
 
-import rosebot
+import m3_rosebot_zhen
 import mqtt_remote_method_calls as com
 import time
-import shared_gui_delegate_on_robot
+import m3_gui_delegate_on_robot
 
 def main():
     """
@@ -16,7 +16,6 @@ def main():
       1. Makes the EV3 robot to various things.
       2. Communicates via MQTT with the GUI code that runs on the LAPTOP.
     """
-    run_caliberate_arm()
     real_run()
     # run_test_arm()
     # run_caliberate_arm()
@@ -31,8 +30,8 @@ def main():
     speak("say hello to my little friend")
 
 def real_run():
-    robot = rosebot.RoseBot()
-    delegate = shared_gui_delegate_on_robot.ResponderToGUIMessages(robot)
+    robot = m3_rosebot_zhen.RoseBot()
+    delegate = m3_gui_delegate_on_robot.ResponderToGUIMessages(robot)
     mqtt_receiver = com.MqttClient(delegate)
     mqtt_receiver.connect_to_pc()
 
@@ -42,47 +41,47 @@ def real_run():
         time.sleep(0.01)
 
 def run_test_arm():
-    robot=rosebot.RoseBot()
+    robot=m3_rosebot_zhen.RoseBot()
     robot.arm_and_claw.raise_arm()
 
 def run_caliberate_arm():
-    robot=rosebot.RoseBot()
+    robot=m3_rosebot_zhen.RoseBot()
     print('running')
     robot.arm_and_claw.calibrate_arm()
 
 def run_mov3_arm_to_position(pos):
-    robot=rosebot.RoseBot()
+    robot=m3_rosebot_zhen.RoseBot()
     robot.arm_and_claw.move_arm_to_position(pos)
 
 def lower_arm():
-    robot = rosebot.RoseBot()
+    robot = m3_rosebot_zhen.RoseBot()
     robot.arm_and_claw.lower_arm()
 def go(left, right):
-    robot = rosebot.RoseBot()
+    robot = m3_rosebot_zhen.RoseBot()
     robot.drive_system.go(left , right)
 def stop():
-    robot = rosebot.RoseBot()
+    robot = m3_rosebot_zhen.RoseBot()
     robot.drive_system.stop()
 def go_straight_for_seconds(second, speed):
     print('running')
-    robot = rosebot.RoseBot()
+    robot = m3_rosebot_zhen.RoseBot()
     robot.drive_system.go_straight_for_seconds(second, speed)
 def go_straight_for_inches_using_time(inch, speed):
-    robot = rosebot.RoseBot()
+    robot = m3_rosebot_zhen.RoseBot()
     robot.drive_system.go_straight_for_inches_using_time(inch, speed)
 def go_straight_for_inches_using_encoder(inch, speed):
-    robot = rosebot.RoseBot()
+    robot = m3_rosebot_zhen.RoseBot()
     robot.drive_system.go_straight_for_inches_using_encoder(inch, speed)
 def beeper(time):
-    robot = rosebot.RoseBot()
+    robot = m3_rosebot_zhen.RoseBot()
     robot.sound_system.beeper.beep(time)
 def tone_make(frequency, duration):
-    robot = rosebot.RoseBot()
+    robot = m3_rosebot_zhen.RoseBot()
     robot.sound_system.tone_maker.play_tone(frequency,duration).wait()
 
 
 def speak(str):
-    robot = rosebot.RoseBot()
+    robot = m3_rosebot_zhen.RoseBot()
     robot.sound_system.speech_maker.speak(str)
 
 

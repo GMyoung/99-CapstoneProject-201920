@@ -3,7 +3,7 @@
   Displays the Graphical User Interface (GUI) and communicates with the robot.
 
   Authors:  Your professors (for the framework)
-    and Zhen Yang.
+    and Yicheng Yang.
   Winter term, 2018-2019.
 """
 
@@ -39,9 +39,9 @@ def private_gui():
     # -------------------------------------------------------------------------
     frame = ttk.Frame(root, padding=10, borderwidth=5, relief="ridge")
     frame.grid()
-    forward_button = ttk.Button(frame, text="chase object")
-    initial_label = ttk.Label(frame, text="initial speed(0 to 10)")
-    rate_label = ttk.Label(frame, text="led rate(0 to 10)")
+    forward_button = ttk.Button(frame, text="start maze cleaning")
+    initial_label = ttk.Label(frame, text="cw=0,ccw=whatever")
+    rate_label = ttk.Label(frame, text="speed")
     initial_speed_entry = ttk.Entry(frame, width=8)
     initial_speed_entry.insert(0, "0")
     rate_entry = ttk.Entry(frame, width=8)
@@ -64,49 +64,20 @@ def private_gui():
     camera_speed_label.grid(row=3, column=2)
     camera_speed_entry = ttk.Entry(frame, width=8)
     camera_speed_entry.grid(row=4, column=2)
-    camera_button = ttk.Button(frame, text='camera')
+    camera_button = ttk.Button(frame, text='robot dog chasing')
     camera_button.grid(row=4, column=0)
-    camera_button['command'] = lambda: mqtt_sender.send_message("go_and_pick", [int(camera_clock_entry.get()),
-                                                                                int(camera_speed_entry.get())])
+    camera_button['command'] = lambda: mqtt_sender.send_message("start_to_catch", [
+        int(camera_speed_entry.get()),int(camera_clock_entry.get())])
 
-    proximity_go_inch_label = ttk.Label(frame, text='inch')
-    proximity_go_inch_label.grid(row=5, column=0)
-    proximity_go_inch_entry = ttk.Entry(frame, width=8)
-    proximity_go_inch_entry.grid(row=6, column=0)
-    proximity_go_speed_label = ttk.Label(frame, text='speed')
-    proximity_go_speed_label.grid(row=5, column=1)
-    proximity_go_speed_entry = ttk.Entry(frame, width=8)
-    proximity_go_speed_entry.grid(row=6, column=1)
-    proximity_go_delta_label = ttk.Label(frame, text='delta')
-    proximity_go_delta_label.grid(row=5, column=2)
-    proximity_go_delta_entry = ttk.Entry(frame, width=8)
-    proximity_go_delta_entry.grid(row=6, column=2)
-    proximity_go_less = ttk.Button(frame, text='go until less')
-    proximity_go_less.grid(row=7, column=0)
-    proximity_go_less['command'] = lambda: mqtt_sender.send_message("go_less", [int(proximity_go_inch_entry.get()),
-                                                                                int(proximity_go_speed_entry.get())])
-    proximity_go_great = ttk.Button(frame, text='go until greater')
-    proximity_go_great.grid(row=7, column=1)
-    proximity_go_great['command'] = lambda: mqtt_sender.send_message("go_greater", [int(proximity_go_inch_entry.get()),
-                                                                                    int(
-                                                                                        proximity_go_speed_entry.get())])
-    proximity_go_within = ttk.Button(frame, text='go until within')
-    proximity_go_within.grid(row=7, column=2)
-    proximity_go_within['command'] = lambda: mqtt_sender.send_message("go_within", [int(proximity_go_delta_entry.get()),
-                                                                                    int(proximity_go_inch_entry.get()),
-                                                                                    int(
-                                                                                        proximity_go_speed_entry.get())])
 
-    proximity_speed_label = ttk.Label(frame, text="speed")
-    proximity_speed_label.grid(row=1, column=1)
 
     root.mainloop()
 
-def going_foward(mqtt_sender, initial_speed_entry, frequency_step):
-    print("go_foward_until")
+def going_foward(mqtt_sender, initial_speed_entry, rate_entry):
+    print("i'm a cleaning robot, i clean everything")
     speed = initial_speed_entry.get()
-    frequency_step = frequency_step.get()
-    mqtt_sender.send_message('go_and_changing_led', [speed, frequency_step])
+    rate_entry = rate_entry.get()
+    mqtt_sender.send_message('go_and_clean', [speed, rate_entry])
 # def main():
 #     """
 #     This code, which must run on a LAPTOP:
