@@ -7,6 +7,7 @@
   Winter term, 2018-2019.
 """
 import rosebot
+import mqtt_remote_method_calls as com
 class ResponderToGUIMessages(object):
     def __init__(self,robot):
         """
@@ -15,65 +16,65 @@ class ResponderToGUIMessages(object):
         """
         self.robot = robot
         self.stop_program=False
-    def go(self,left_wheel_speed, right_wheel_speed):
-        left = int(left_wheel_speed)
-        right = int(right_wheel_speed)
-        self.robot.drive_system.go(left, right)
+        self.count=0
+        self.mqtt_sender=None
+        self.going=False
+    def forward(self):
+        print('forward')
+        if not self.going:
+            self.robot.drive_system.go(30, 30)
+            self.going=True
+        # if self.sensor_system.ir_proximity_sensor.get_distance_in_inches() < 5:
+        #     self.stop()
+
+    def backward(self):
+        print('backward')
+        self.robot.drive_system.go(-30, -30)
+    def left(self):
+        print('left')
+        self.robot.drive_system.go(-30, 30)
+    def right(self):
+        print('right')
+        self.robot.drive_system.go(30, -30)
     def stop(self):
-        print("receive stop")
+        print('receive stop')
+        self.going=False
         self.robot.drive_system.stop()
-    def raise_arm(self):
-        print('recieve raise arm')
-        self.robot.arm_and_claw.raise_arm()
-    def lower_arm(self):
-        print('recieve lower arm')
-        self.robot.arm_and_claw.lower_arm()
-    def calibrate_arm(self):
-        print('recieve calib arm')
-        self.robot.arm_and_claw.calibrate_arm()
-    def move_arm_to_position(self,pos):
-        self.robot.arm_and_claw.move_arm_to_position(int(pos))
-    def go_straight_for_seconds(self,seconds,speed):
-        print('recieve go straight for seconds')
-        self.robot.drive_system.go_straight_for_seconds(seconds, speed)
-    def go_straight_for_inches(self,inch,speed):
-        print('recieve go straight for inches')
-        self.robot.drive_system.go_straight_for_inches_using_time(inch,speed)
-    def go_straight_for_degrees(self,inch,speed):
-        print('recieve go straight for inches')
-        self.robot.drive_system.go_straight_for_inches_using_encoder(inch,speed)
-    def beeper(self,time):
-        print('receive beeper')
-        self.robot.sound_system.beeper.beep(time)
-    def tone_make(self,frequency,duration):
-        print(('receive tone make'))
-        self.robot.sound_system.tone_maker.play_tone(frequency,duration)
+    def pick_up(self):
+        # mqtt_sender = com.MqttClient()
+        # mqtt_sender.connect_to_ev3()
+        color=self.robot.sensor_system.color_sensor.get_color_as_name()
+        print(color)
+        # self.speech_make("This is ",color)
+        # if color=='Red':
+            # print('red')
+        self.robot.sound_system.speech_maker.speak("He has been terminated. I have seized another light saber of the color"+ color)
+        # self.robot.sound_system.speech_maker.speak("I have seized another light saber of the color" + color)
+        self.mqtt_sender.send_message("blast", [color,self.count])
+        self.count = self.count+1
+        # elif color=='orange':
+        #     self.mqtt_sender.send_message("points", [2])
+        # else:
+        #     print('else')
+        #     self.mqtt_sender.send_message('test',[])
+    def go_less(self, inches, speed):
+        print("receive go less")
+        self.robot.drive_system.go_forward_until_distance_is_less_than(inches, speed)
+        self.robot.sound_system.speech_maker.speak("Hey you almost hit me!")
+
+    def go_greater(self, inches, speed):
+        print("receive go greater")
+        self.robot.drive_system.go_backward_until_distance_is_greater_than(inches, speed)
+        self.robot.sound_system.speech_maker.speak("There we go")
+
     def speech_make(self,phrase):
         print("receive speech make")
         self.robot.sound_system.speech_maker.speak(phrase)
-    def quit(self):
-        self.stop_program=True
-    def go_and_increase_frequency(self,speed,frequency_step):
-        print("receive go and increase frequency")
-        self.robot.drive_system.go_and_increase_frequency(speed,frequency_step)
-
-
-
-
-
-
-
-
-    def go_less(self,inches,speed):
-        print("receive go less")
-        self.robot.drive_system.go_forward_until_distance_is_less_than(inches, speed)
-    def go_greater(self,inches,speed):
-        print("receive go greater")
-        self.robot.drive_system.go_backward_until_distance_is_greater_than(inches, speed)
-    def go_within(self,delta,inches,speed):
-        print("receive go within")
-        self.robot.drive_system.go_until_distance_is_within(delta, inches, speed)
-
-    def go_and_pick(self,clock,speed):
-        print("receive go_and_pick")
-        self.robot.drive_system.go_and_pick(clock,speed)
+    def test(self):
+        print('test10')
+    def raise_arm(self):
+        print('recieve raise arm')
+        self.robot.arm_and_claw.raise_arm()
+    def calibrate_arm(self):
+        print('recieve calib arm')
+        self.robot.arm_and_claw.calibrate_arm()
