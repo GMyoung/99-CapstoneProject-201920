@@ -194,10 +194,14 @@ class DriveSystem(object):
         while True:
             dist=self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
             print(dist)
-            if dist< inches:
-                self.stop()
-                break
-            self.go(speed, speed)
+            B = self.sensor_system.camera.get_biggest_blob()
+            self.go(speed, -speed)
+            if B.get_area() > 30:
+                if dist < inches:
+                    self.stop()
+                    break
+                self.go(speed, speed)
+
         """
         Goes forward at the given speed until the robot is less than
         the given number of inches from the nearest object that it senses.
@@ -294,7 +298,7 @@ class DriveSystem(object):
                 frequency = frequency + 1
                 init_distance = distance
             ToneMaker().play_tone(frequency, 1000)
-            if distance < 3:
+            if distance < 6:
                 if clock == 0:
                     self.clock_wise_spin_a_little()
                     self.go_and_clean(self, clock)
@@ -313,12 +317,14 @@ class DriveSystem(object):
         blob = self.sensor_system.camera.get_biggest_blob()
         area = blob.get_area()
         print(blob)
-        if clock == 0:
-            self.spin_clockwise_until_sees_object(speed, 20)
+        while True:
+            if clock == 0:
+                self.spin_clockwise_until_sees_object(speed, 20)
+                self.go_forward_until_distance_is_less_than(3,speed)
 
-        else:
-            self.spin_counterclockwise_until_sees_object(speed, 20)
-        self.go_forward_until_distance_is_less_than(speed,5)
+            else:
+                self.spin_counterclockwise_until_sees_object(speed, 20)
+                self.go_forward_until_distance_is_less_than(3, speed)
 
     def go_and_increase_beep(self,speed,frequency_step):
         init_distance=99999
@@ -420,8 +426,8 @@ class DriveSystem(object):
             B = self.sensor_system.camera.get_biggest_blob()
             self.go(speed, -speed)
             if B.get_area() > area:
-                self.counter_clock_wise_spin_a_little()
-                self.clock_wise_spin_a_little()
+                self.shaking_its_tail()
+                break
 
         """
         Spins clockwise at the given speed until the camera sees an object
@@ -434,9 +440,13 @@ class DriveSystem(object):
             B = self.sensor_system.camera.get_biggest_blob()
             self.go(-speed, speed)
             if B.get_area() > area:
-                self.clock_wise_spin_a_little()
-                self.counter_clock_wise_spin_a_little()
+                self.shaking_its_tail()
+                break
 
+    def shaking_its_tail(self):
+        self.clock_wise_spin_a_little()
+        self.counter_clock_wise_spin_a_little()
+        self.sound_system.speech_maker.speak("i found it you liitle human i'm coming")
         """
         Spins counter-clockwise at the given speed until the camera sees an object
         of the trained color whose area is at least the given area.
