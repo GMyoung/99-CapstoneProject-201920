@@ -16,7 +16,7 @@ import time
 
 def main():
     delegate=Delegate_on_laptop()
-    # real_run()
+    # real_run()s
     mqtt_sender=com.MqttClient(delegate)
     mqtt_sender.connect_to_ev3()
 
