@@ -376,6 +376,8 @@ def handle_move_arm_to_position(arm_position_entry, mqtt_sender):
 # Handlers for Buttons in the Control frame.
 ###############################################################################
 def handle_quit(mqtt_sender):
+    mqtt_sender.send_message('stop',[])
+
     """
     Tell the robot's program to stop its loop (and hence quit).
       :type  mqtt_sender:  com.MqttClient
@@ -385,6 +387,8 @@ def handle_quit(mqtt_sender):
 
 
 def handle_exit(mqtt_sender):
+    mqtt_sender.send_message('stop', [])
+    mqtt_sender.send_message("exit")
     """
     Tell the robot's program to stop its loop (and hence quit).
     Then exit this program.
