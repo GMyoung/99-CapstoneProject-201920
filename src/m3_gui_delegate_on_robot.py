@@ -89,7 +89,7 @@ class ResponderToGUIMessages(object):
         self.robot.drive_system.start_to_catch(speed,clock)
     def after_catch_stuff(self,speed,clock):
         print("I got the stuff")
-        self.after_catch_stuff(speed,clock)
+        self.robot.drive_system.after_catch_stuff(speed,clock)
     def go_chase_target(self, speed, clock):
         print("go chase target")
-        self.go_chase_target(speed,clock)
+        self.robot.drive_system.go_chase_target(speed,clock)

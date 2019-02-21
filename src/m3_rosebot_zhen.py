@@ -166,6 +166,13 @@ class DriveSystem(object):
 
     def go_straight_until_color_is(self, color, speed):
         while True:
+            distance = self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
+            if self.sensor_system.color_sensor.get_color_as_name() == 'Red':
+
+                self.sound_system.speech_maker.speak("Arrived")
+                self.stop()
+                time.sleep(10)
+                break
             if self.sensor_system.color_sensor.get_color_as_name() == color:
                 self.stop()
                 break
@@ -263,91 +270,52 @@ class DriveSystem(object):
                 self.stop()
                 break
 
-    def go_and_clean(self,clock,speed):
-        robot = RoseBot()
-        init_distance = 99999
-        frequency = 10
-        # Infrared=InfraredProximitySensor()
-        # ToneMaker().play_tone(frequency, 1000)
-        while True:
-            self.go(speed, speed)
-            distance = self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
-            if distance < init_distance:
-                print(frequency)
-                frequency = frequency + 1
-                init_distance = distance
-            ToneMaker().play_tone(frequency, 1000)
-            if distance < 7:
-                frequency = 10
-                if clock == 0:
-                    self.clock_wise_spin_a_little()
-                else:
-                    self.counter_clock_wise_spin_a_little()
-
-    def again_go_and_clean(self, clock, speed):
-        robot = RoseBot()
-        init_distance = 99999
-        frequency = 10
-        # Infrared=InfraredProximitySensor()
-        # ToneMaker().play_tone(frequency, 1000)
-        while True:
-            self.go(speed, speed)
-            distance = self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
-            if distance < init_distance:
-                print(frequency)
-                frequency = frequency + 1
-                init_distance = distance
-            ToneMaker().play_tone(frequency, 1000)
-            if distance < 6:
-                if clock == 0:
-                    self.clock_wise_spin_a_little()
-                    self.go_and_clean(self, clock)
-                else:
-                    self.counter_clock_wise_spin_a_little()
-                    self.go_and_clean(self, clock)
-
-
-
-
-
-
 
     def start_to_catch(self,speed,clock):
-        robot = RoseBot()
-        init_distance = 99999
+        print(speed,clock)
 
         while True:
-            self.go_straight_until_color_is('White', speed)
 
             distance = self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
-
-            if distance < 7:
+            print(distance)
+            if distance < 1:
+                self.stop()
+                self.sound_system.speech_maker.speak("Got you").wait()
                 self.arm_and_claw.raise_arm()
-                self.sound_system.speech_maker.speak("Got you")
+
+                self.sound_system.speech_maker.speak("Got you").wait()
+
+                time.sleep(10)
                 break
-            if clock == 0:
-                self.clock_wise_spin_a_little()
-            else:
-                self.counter_clock_wise_spin_a_little()
+            self.sound_system.beeper.beep(1)
+            self.go_straight_until_color_is('White', speed)
+            if self.sensor_system.color_sensor.get_color_as_name() == 'White':
+                print('sensor working')
+                if clock == 0:
+                    self.clock_wise_spin_a_little()
+                    self.clock_wise_spin_a_little()
+                    print('clock working')
+                else:
+                    self.counter_clock_wise_spin_a_little()
 
     def after_catch_stuff(self,speed,clock):
-        robot = RoseBot
+        self.go_straight_until_color_is('White',speed)
         while True:
+            self.sound_system.beeper.beep(1)
             self.go_straight_until_color_is('White', speed)
 
-            distance = self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
 
-            if self.sensor_system.color_sensor.get_color_as_name() == 'Yellow':
+            if self.sensor_system.color_sensor.get_color_as_name() == 'Red':
                 self.sound_system.speech_maker.speak("Arrived")
+                self.stop()
                 break
-            if clock == 0:
-                self.clock_wise_spin_a_little()
-            else:
-                self.counter_clock_wise_spin_a_little()
-
+            if self.sensor_system.color_sensor.get_color_as_name() == 'White':
+                if clock == 0:
+                    self.clock_wise_spin_a_little()
+                else:
+                    self.counter_clock_wise_spin_a_little()
 
     def go_chase_target(self,speed,clock):
-        robot = RoseBot()
         blob = self.sensor_system.camera.get_biggest_blob()
         area = blob.get_area()
         print(blob)
@@ -355,45 +323,12 @@ class DriveSystem(object):
             self.spin_clockwise_until_sees_object(speed,20)
         else:
             self.spin_counterclockwise_until_sees_object(speed,20)
-        self.stop()
+        self.go(speed,speed)
+        distance = self.sensor_system.ir_proximity_sensor.get_distance_in_inches()
+        if distance <= 5:
+            self.stop()
         self.arm_and_claw.lower_arm()
-
-
-
-
-
-
-    def go_and_pick(self,clock,speed):
-        # camera=
-        blob=self.sensor_system.camera.get_biggest_blob()
-        area=blob.get_area()
-        print(blob)
-        if clock==0:
-            self.spin_clockwise_until_sees_object(speed,20)
-
-        else:
-            self.spin_counterclockwise_until_sees_object(speed, 20)
-        self.go_and_increase_beep(speed,100)
-        self.arm_and_claw.raise_arm()
-
-
-
-
-    def robot_dog_chase(self,clock,speed):
-        blob = self.sensor_system.camera.get_biggest_blob()
-        area = blob.get_area()
-        print(blob)
-        while True:
-            if clock == 0:
-                self.spin_clockwise_until_sees_object(speed, 20)
-                self.go_forward_until_distance_is_less_than(3,speed)
-
-            else:
-                self.spin_counterclockwise_until_sees_object(speed, 20)
-                self.go_forward_until_distance_is_less_than(3, speed)
-
-
-
+        self.sound_system.speech_maker.speak("congratulations, You have succeeed the game")
     def go_and_increase_beep(self,speed,frequency_step):
         init_distance=99999
         frequency=10

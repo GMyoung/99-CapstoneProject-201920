@@ -1,7 +1,7 @@
 """
   Capstone Project.  Code to run on the EV3 robot (NOT on a laptop).
   Author:  Your professors (for the framework)
-    and Yicheng Yang..
+    and Zhen Yang..
   Winter term, 2018-2019.
 """
 
@@ -16,15 +16,16 @@ def main():
       1. Makes the EV3 robot to various things.
       2. Communicates via MQTT with the GUI code that runs on the LAPTOP.
     """
+    #run_caliberate_arm()
     real_run()
     # run_test_arm()
-    # run_caliberate_arm()
+    #run_caliberate_arm()
     # run_mov3_arm_to_position(5000)
     # lower_arm()
     # go(100, 50)
     # stop()
     # go_straight_for_seconds(10,70)
-    # go_straight_for_inches_using_time(30, 50)
+    #start_to_catch(40,0)
     # tone_make(100, 200)
     # beep(10)
     speak("say hello to my little friend")
@@ -83,6 +84,22 @@ def tone_make(frequency, duration):
 def speak(str):
     robot = m3_rosebot_zhen.RoseBot()
     robot.sound_system.speech_maker.speak(str)
+
+#
+# def start_to_catch(self, speed, clock):
+#     robot = m3_rosebot_zhen
+#     robot.drive_system.start_to_catch(speed, clock)
+#
+#
+# def after_catch_stuff(self, speed, clock):
+#     robot = m3_rosebot_zhen
+#     robot.drive_system.after_catch_stuff(speed, clock)
+#
+#
+# def go_chase_target(self, speed, clock):
+#     print("go chase target")
+#     self.drive_system.go_chase_target(speed, clock)
+
 
 
 
